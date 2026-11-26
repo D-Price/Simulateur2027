@@ -2,7 +2,7 @@
 
 Application web statique permettant d'estimer l'impact direct et mécanique des programmes des candidats à l'élection présidentielle française de 2027 sur la vie quotidienne.
 
-👉 **Accéder au simulateur en ligne :** `https://votre-pseudo.github.io/nom-du-depot/` *(remplacez par votre lien GitHub Pages)*
+👉 **Accéder au simulateur en ligne :** `https://impact2027.fr/`
 
 ## Fonctionnalités
 
