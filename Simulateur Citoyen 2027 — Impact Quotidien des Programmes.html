@@ -1,0 +1,3502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Citoyen 2027 — Impact Quotidien des Programmes</title>
+    <style>
+        /* ==========================================================================
+         * 1. DESIGN TOKENS — PALETTE INSTITUTIONNELLE SOBRE (WCAG AA)
+         * ========================================================================== */
+        :root {
+            --bg-page: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --bg-hover: #e2e8f0;
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+
+            /* Accent civique neutre (bleu ardoise) */
+            --slate-blue: #1e3a5f;
+            --slate-blue-hover: #152b47;
+            --slate-blue-soft: #eaf0f7;
+            --slate-blue-border: #c5d6ea;
+
+            /* Indicateurs mécaniques doux (gain / perte en euros uniquement) */
+            --gain-text: #166534;
+            --gain-bg: #ecfdf3;
+            --gain-bar: #2f855a;
+
+            --loss-text: #991b1b;
+            --loss-bg: #fef2f2;
+            --loss-bar: #c53030;
+
+            --neutral-bar: #94a3b8;
+
+            /* Badges statut programme */
+            --status-full-bg: #eaf0f7;
+            --status-full-text: #1e3a5f;
+            --status-part-bg: #f1f5f9;
+            --status-part-text: #475569;
+
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.16);
+
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        /* ==========================================================================
+         * 2. RESET & BASE
+         * ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, p, ul {
+            margin: 0;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--slate-blue);
+            outline-offset: 2px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ==========================================================================
+         * 3. EN-TÊTE & BANDEAU MÉTHODOLOGIQUE
+         * ========================================================================== */
+        .site-header {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 13px 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--slate-blue);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-size: 1.12rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            line-height: 1.25;
+        }
+
+        .brand-subtitle {
+            font-size: 0.79rem;
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border-radius: var(--radius-sm);
+            font-size: 0.83rem;
+            font-weight: 600;
+            border: 1px solid var(--border-medium);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+
+        .btn:hover {
+            background: var(--bg-subtle);
+        }
+
+        .btn-primary {
+            background: var(--slate-blue);
+            border-color: var(--slate-blue);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: var(--slate-blue-hover);
+            border-color: var(--slate-blue-hover);
+        }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.76rem;
+        }
+
+        .methodology-banner {
+            background: var(--slate-blue-soft);
+            border-bottom: 1px solid var(--slate-blue-border);
+            padding: 12px 0;
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.81rem;
+            color: #1e293b;
+            line-height: 1.48;
+        }
+
+        .banner-content svg {
+            flex-shrink: 0;
+            margin-top: 2px;
+            color: var(--slate-blue);
+        }
+
+        .banner-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid var(--slate-blue-border);
+            color: var(--slate-blue);
+        }
+
+        /* ==========================================================================
+         * 4. DISPOSITION 2 COLONNES
+         * ========================================================================== */
+        .main-layout {
+            flex: 1;
+            padding: 22px 0 42px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        @media (min-width: 1040px) {
+            .main-layout {
+                grid-template-columns: 400px 1fr;
+                gap: 26px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .main-layout {
+                grid-template-columns: 420px 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ==========================================================================
+         * 5. COLONNE GAUCHE : VOTRE PROFIL QUOTIDIEN
+         * ========================================================================== */
+        .profile-panel {
+            overflow: hidden;
+        }
+
+        @media (min-width: 1040px) {
+            .profile-panel {
+                position: sticky;
+                top: 82px;
+                max-height: calc(100vh - 100px);
+                overflow-y: auto;
+            }
+        }
+
+        .profile-header {
+            padding: 16px 18px 13px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .profile-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .profile-header p {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .presets-box {
+            padding: 12px 18px 14px;
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .presets-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .presets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .preset-btn {
+            text-align: left;
+            padding: 7px 9px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--slate-blue);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            line-height: 1.25;
+            transition: all 0.15s ease;
+        }
+
+        .preset-btn:hover {
+            background: var(--slate-blue-soft);
+            border-color: var(--slate-blue);
+        }
+
+        .preset-btn small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Accordéons */
+        .accordion-item {
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-trigger {
+            width: 100%;
+            background: var(--bg-surface);
+            border: none;
+            padding: 13px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.15s ease;
+        }
+
+        .accordion-trigger:hover {
+            background: var(--bg-subtle);
+        }
+
+        .accordion-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .accordion-title {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accordion-step {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--slate-blue-soft);
+            color: var(--slate-blue);
+            font-size: 0.71rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .accordion-summary {
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            padding-left: 28px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .accordion-chevron {
+            width: 17px;
+            height: 17px;
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .accordion-item.open .accordion-chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            display: none;
+            padding: 4px 18px 16px;
+            background: var(--bg-surface);
+        }
+
+        .accordion-item.open .accordion-body {
+            display: block;
+        }
+
+        /* Contrôles */
+        .field {
+            margin-top: 13px;
+        }
+
+        .field:first-child {
+            margin-top: 4px;
+        }
+
+        .field-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .field-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .field-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--slate-blue);
+            background: var(--slate-blue-soft);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+        }
+
+        .field-hint {
+            font-size: 0.71rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.35;
+        }
+
+        .range-marks {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .link-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            color: var(--slate-blue);
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--slate-blue);
+            cursor: pointer;
+            height: 6px;
+        }
+
+        .select-input, .text-input, .number-input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            background: var(--bg-surface);
+        }
+
+        .btn-group {
+            display: grid;
+            gap: 6px;
+        }
+
+        .btn-group-2 { grid-template-columns: repeat(2, 1fr); }
+        .btn-group-3 { grid-template-columns: repeat(3, 1fr); }
+
+        .choice-btn {
+            padding: 7px 6px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        .choice-btn:hover {
+            background: var(--bg-subtle);
+        }
+
+        .choice-btn.active {
+            background: var(--slate-blue);
+            border-color: var(--slate-blue);
+            color: #ffffff;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            padding: 3px;
+            background: var(--bg-subtle);
+        }
+
+        .stepper-btn {
+            width: 32px;
+            height: 28px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .stepper-btn:hover {
+            background: var(--bg-hover);
+        }
+
+        .stepper-val {
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--bg-subtle);
+        }
+
+        .toggle-row label {
+            font-size: 0.79rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--slate-blue);
+            cursor: pointer;
+        }
+
+        .sub-box {
+            margin-top: 8px;
+            padding: 10px 12px;
+            border-left: 3px solid var(--slate-blue);
+            background: var(--bg-subtle);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        /* ==========================================================================
+         * 6. COLONNE DROITE : SÉLECTEUR DE CANDIDATS & CARTES COMPARATIVES
+         * ========================================================================== */
+        .results-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-width: 0;
+        }
+
+        .selector-panel {
+            padding: 16px 18px;
+        }
+
+        .selector-top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .selector-top h2 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .selector-top p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .selector-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 190px;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 7px 10px 7px 32px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            font-size: 0.82rem;
+            background: var(--bg-page);
+            color: var(--text-primary);
+        }
+
+        .badge-counter {
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        .pills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .cand-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 11px;
+            border-radius: 999px;
+            border: 1px solid var(--border-medium);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            font-size: 0.79rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .cand-pill:hover {
+            border-color: var(--slate-blue);
+            background: var(--bg-subtle);
+        }
+
+        .cand-pill.selected {
+            background: var(--slate-blue);
+            border-color: var(--slate-blue);
+            color: #ffffff;
+        }
+
+        .cand-pill-party {
+            font-weight: 400;
+            font-size: 0.72rem;
+            opacity: 0.78;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dot-full { background: #1e3a5f; }
+        .dot-part { background: #94a3b8; }
+        .cand-pill.selected .dot-full { background: #93c5fd; }
+        .cand-pill.selected .dot-part { background: #cbd5e1; }
+
+        .legend-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            margin-top: 10px;
+            padding-top: 9px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Grille de cartes résultats */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        @media (min-width: 768px) {
+            .comparison-grid.two-cols {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .result-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .result-card-header {
+            padding: 16px 18px 13px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-subtle);
+        }
+
+        .card-badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.69rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .status-full {
+            background: var(--status-full-bg);
+            color: var(--status-full-text);
+            border: 1px solid var(--slate-blue-border);
+        }
+
+        .status-part {
+            background: #ffffff;
+            color: var(--status-part-text);
+            border: 1px solid var(--border-medium);
+        }
+
+        .date-ref {
+            font-size: 0.71rem;
+            color: var(--text-muted);
+        }
+
+        .cand-name {
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.25;
+        }
+
+        .cand-party {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Bloc synthèse financière + retraite */
+        .synthesis-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        @media (min-width: 520px) {
+            .synthesis-grid {
+                grid-template-columns: 1.15fr 0.85fr;
+            }
+        }
+
+        .synthesis-cell {
+            padding: 14px 18px;
+        }
+
+        .synthesis-cell + .synthesis-cell {
+            border-top: 1px solid var(--border-light);
+        }
+
+        @media (min-width: 520px) {
+            .synthesis-cell + .synthesis-cell {
+                border-top: none;
+                border-left: 1px solid var(--border-light);
+            }
+        }
+
+        .synthesis-label {
+            font-size: 0.69rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+
+        .synthesis-big {
+            font-size: 1.32rem;
+            font-weight: 800;
+            margin-top: 4px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .synthesis-none {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 6px;
+            line-height: 1.35;
+        }
+
+        .synthesis-sub {
+            font-size: 0.74rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+            line-height: 1.35;
+        }
+
+        .val-gain { color: var(--gain-text); }
+        .val-loss { color: var(--loss-text); }
+        .val-neutral { color: var(--text-secondary); }
+
+        /* Décomposition par domaine */
+        .domains-section {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-heading {
+            font-size: 0.71rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .domain-row {
+            margin-bottom: 11px;
+        }
+
+        .domain-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .domain-row-top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .domain-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .amount-pill {
+            font-size: 0.77rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        .pill-gain { background: var(--gain-bg); color: var(--gain-text); }
+        .pill-loss { background: var(--loss-bg); color: var(--loss-text); }
+        .pill-neu  { background: var(--bg-subtle); color: var(--text-secondary); }
+        .pill-na   { background: transparent; color: var(--text-muted); font-weight: 500; font-style: italic; padding-right: 0; }
+
+        .mini-bar-track {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-subtle);
+            border-radius: 999px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mini-bar-center {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--border-medium);
+        }
+
+        .mini-bar-fill {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            border-radius: 999px;
+            transition: width 0.25s ease, left 0.25s ease;
+        }
+
+        .bar-gain { background: var(--gain-bar); }
+        .bar-loss { background: var(--loss-bar); }
+        .bar-neu  { background: var(--neutral-bar); }
+
+        /* Mesures qualitatives */
+        .qualitative-section {
+            padding: 14px 18px;
+            flex: 1;
+        }
+
+        .qual-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .qual-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.79rem;
+            color: var(--text-primary);
+            line-height: 1.42;
+        }
+
+        .theme-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            flex-shrink: 0;
+            margin-top: 2px;
+            background: var(--slate-blue-soft);
+            color: var(--slate-blue);
+        }
+
+        .theme-badge[data-theme="CAF"] { background: #e8f3ee; color: #166534; }
+        .theme-badge[data-theme="Famille"] { background: #eef6f0; color: #1e6045; }
+        .theme-badge[data-theme="Sécu"] { background: #e6f2f5; color: #155e75; }
+        .theme-badge[data-theme="Retraite"] { background: #eef2ff; color: #3730a3; }
+        .theme-badge[data-theme="Travail"] { background: #eaf0f7; color: #1e3a5f; }
+        .theme-badge[data-theme="Logement"] { background: #fef6e7; color: #92400e; }
+        .theme-badge[data-theme="Énergie"] { background: #fef3c7; color: #854d0e; }
+        .theme-badge[data-theme="Éducation"] { background: #f3effa; color: #4c3575; }
+        .theme-badge[data-theme="Impôts"] { background: #f1f5f9; color: #334155; }
+        .theme-badge[data-theme="Services publics"] { background: #f1f5f9; color: #475569; }
+        .theme-badge[data-theme="Note"] { background: #f1f5f9; color: #64748b; }
+
+        /* Transparence des calculs */
+        .formulas-wrap {
+            padding: 0 18px 14px;
+        }
+
+        .formulas-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 12px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.77rem;
+            font-weight: 600;
+            color: var(--slate-blue);
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .formulas-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .formulas-box {
+            margin-top: 8px;
+            padding: 11px 13px;
+            background: var(--bg-page);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.73rem;
+        }
+
+        .formula-group {
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .formula-group:last-child {
+            padding-bottom: 0;
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .formula-group-head {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+
+        .formula-line {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+            margin-top: 2px;
+        }
+
+        .result-card-footer {
+            padding: 10px 18px;
+            background: var(--bg-subtle);
+            border-top: 1px solid var(--border-light);
+            font-size: 0.73rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .result-card-footer a {
+            color: var(--slate-blue);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .result-card-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Note pédagogique */
+        .info-card {
+            padding: 16px 18px;
+            font-size: 0.79rem;
+            color: var(--text-secondary);
+        }
+
+        .info-card h3 {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .info-card ul {
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .empty-state {
+            background: var(--bg-surface);
+            border: 1px dashed var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 36px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Pied de page */
+        .site-footer {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-light);
+            padding: 16px 0;
+            font-size: 0.77rem;
+            color: var(--text-muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* ==========================================================================
+         * 7. MODALE GESTIONNAIRE programmes.json (3 ONGLETS)
+         * ========================================================================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.56);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal-dialog {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .modal-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .modal-header p {
+            font-size: 0.77rem;
+            color: var(--text-muted);
+        }
+
+        .modal-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-surface);
+        }
+
+        .modal-tab {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 11px 4px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-tab.active {
+            color: var(--slate-blue);
+            border-bottom-color: var(--slate-blue);
+        }
+
+        .modal-body {
+            padding: 18px 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .toolbar-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .json-editor {
+            width: 100%;
+            min-height: 320px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            line-height: 1.5;
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            resize: vertical;
+        }
+
+        .alert-box {
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--loss-bg);
+            color: var(--loss-text);
+            border: 1px solid #fecaca;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 11px;
+        }
+
+        @media (min-width: 640px) {
+            .form-grid-2 { grid-template-columns: repeat(2, 1fr); }
+            .form-grid-3 { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .form-section-title {
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--slate-blue);
+            margin: 15px 0 9px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .opendata-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            font-size: 0.83rem;
+            color: var(--text-primary);
+            line-height: 1.55;
+        }
+
+        .opendata-card h3 {
+            font-size: 0.94rem;
+            color: var(--slate-blue);
+            margin-bottom: 8px;
+        }
+
+        .opendata-steps {
+            margin: 12px 0 14px;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .code-inline {
+            font-family: var(--font-mono);
+            font-size: 0.77rem;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: var(--slate-blue);
+        }
+
+        /* Toast notifications (jamais alert()) */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 370px;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 11px 15px;
+            border-radius: var(--radius-sm);
+            font-size: 0.81rem;
+            box-shadow: var(--shadow-lg);
+            transition: opacity 0.25s ease;
+        }
+
+        .toast.fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======================================================================
+         EN-TÊTE INSTITUTIONNEL
+    ====================================================================== -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="brand">
+                <div class="brand-icon" aria-hidden="true">
+                    <svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title">Simulateur Citoyen 2027 — Impact Quotidien des Programmes</h1>
+                    <p class="brand-subtitle">Outil neutre de comparaison des effets mécaniques directs • 10 candidats déclarés (ordre alphabétique)</p>
+                </div>
+            </div>
+
+            <button id="btn-open-modal" type="button" class="btn">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                </svg>
+                <span>Gérer programmes.json / Mettre à jour</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Bandeau méthodologique transparent -->
+    <section class="methodology-banner" aria-label="Avertissement méthodologique">
+        <div class="container banner-content">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div>
+                <p>
+                    <strong>État des programmes au 26 novembre 2026 :</strong> Ce simulateur recense les propositions publiques et sourcées de 10 candidats déclarés, classés strictement par <strong>ordre alphabétique de nom de famille</strong>, sans note ni classement. Seuls les <strong>effets mécaniques directs chiffrés</strong> sont calculés (sans hypothèse macroéconomique d'inflation ou de croissance). Lorsqu'un candidat n'a pas encore publié de chiffre sur un domaine, l'outil indique explicitement <em>« Mesure non précisée »</em> sans jamais extrapoler.
+                </p>
+                <div class="banner-meta">
+                    <span class="meta-chip">Clôture des 500 parrainages : 12 mars 2027</span>
+                    <span class="meta-chip">1er tour : 18 avril 2027</span>
+                    <span class="meta-chip">Distinction : Programme 2027 publié vs Propositions partielles 2027</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         CONTENU PRINCIPAL (2 COLONNES)
+    ====================================================================== -->
+    <main class="container main-layout">
+
+        <!-- COLONNE GAUCHE : VOTRE PROFIL QUOTIDIEN -->
+        <aside class="panel profile-panel" aria-label="Votre profil quotidien">
+            <div class="profile-header">
+                <div>
+                    <h2>Votre profil quotidien</h2>
+                    <p>Simulation recalculée en temps réel</p>
+                </div>
+                <button id="btn-reset-profile" type="button" class="btn btn-sm">Réinitialiser</button>
+            </div>
+
+            <!-- 4 profils types en 1 clic -->
+            <div class="presets-box">
+                <span class="presets-label">Profils types en 1 clic</span>
+                <div class="presets-grid">
+                    <button type="button" class="preset-btn" data-preset="smic">
+                        Salarié célibataire au SMIC
+                        <small>1 426 € net, APL, prime d'act.</small>
+                    </button>
+                    <button type="button" class="preset-btn" data-preset="famille">
+                        Famille 2 enfants
+                        <small>Couple, 3 400 €, voiture + énergie</small>
+                    </button>
+                    <button type="button" class="preset-btn" data-preset="etudiant">
+                        Étudiant détaché
+                        <small>21 ans, boursier, APL, TC</small>
+                    </button>
+                    <button type="button" class="preset-btn" data-preset="retraite">
+                        Retraité propriétaire
+                        <small>70 ans, mutuelle, soins élevés</small>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accordéon 1 : Situation & Revenus -->
+            <div class="accordion-item open" data-acc="situation">
+                <button type="button" class="accordion-trigger" aria-expanded="true">
+                    <div class="accordion-title-wrap">
+                        <span class="accordion-title">
+                            <span class="accordion-step">1</span>
+                            Situation &amp; Revenus
+                        </span>
+                        <span id="sum-situation" class="accordion-summary">Salarié privé, 35 ans, 1 900 €/mois</span>
+                    </div>
+                    <svg class="accordion-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="field">
+                        <label for="input-statut" class="field-label">Statut professionnel</label>
+                        <select id="input-statut" class="select-input">
+                            <option value="salarie">Salarié privé</option>
+                            <option value="fonctionnaire">Fonctionnaire</option>
+                            <option value="independant">Indépendant</option>
+                            <option value="etudiant">Étudiant</option>
+                            <option value="retraite">Retraité</option>
+                            <option value="demandeur">Demandeur d'emploi</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-header">
+                            <label for="input-age" class="field-label">Âge</label>
+                            <span id="val-age" class="field-value">35 ans</span>
+                        </div>
+                        <input id="input-age" type="range" min="18" max="80" step="1" value="35">
+                        <div class="range-marks"><span>18 ans</span><span>50 ans</span><span>80 ans</span></div>
+                    </div>
+
+                    <div class="field">
+                        <span class="field-label" style="display:block;margin-bottom:6px;">Situation familiale</span>
+                        <div class="btn-group btn-group-3">
+                            <button type="button" class="choice-btn" data-famille="celibataire">Célibataire</button>
+                            <button type="button" class="choice-btn" data-famille="couple">Couple</button>
+                            <button type="button" class="choice-btn" data-famille="monoparentale">Monoparentale</button>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-header">
+                            <span class="field-label">Nombre d'enfants à charge</span>
+                            <span class="field-hint" style="margin:0;">(0 à 5)</span>
+                        </div>
+                        <div class="stepper">
+                            <button type="button" id="btn-enf-minus" class="stepper-btn" aria-label="Retirer un enfant">−</button>
+                            <span id="val-enfants" class="stepper-val">0</span>
+                            <button type="button" id="btn-enf-plus" class="stepper-btn" aria-label="Ajouter un enfant">+</button>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-header">
+                            <label for="input-revenu" class="field-label">Revenu mensuel net du foyer</label>
+                            <span id="val-revenu" class="field-value">1 900 €</span>
+                        </div>
+                        <input id="input-revenu" type="range" min="0" max="8000" step="25" value="1900">
+                        <div class="range-marks">
+                            <span>0 €</span>
+                            <button type="button" id="btn-set-smic" class="link-btn">Repère SMIC net (~1 426 €)</button>
+                            <span>8 000 €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordéon 2 : CAF & Prestations sociales -->
+            <div class="accordion-item" data-acc="caf">
+                <button type="button" class="accordion-trigger" aria-expanded="false">
+                    <div class="accordion-title-wrap">
+                        <span class="accordion-title">
+                            <span class="accordion-step">2</span>
+                            CAF &amp; Prestations sociales
+                        </span>
+                        <span id="sum-caf" class="accordion-summary">APL : Non • RSA/Prime : Non • AAH : Non</span>
+                    </div>
+                    <svg class="accordion-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="field">
+                        <div class="toggle-row">
+                            <label for="input-apl-oui">
+                                <input id="input-apl-oui" type="checkbox">
+                                Bénéficiaire des APL
+                            </label>
+                            <button type="button" id="btn-apl-auto" class="link-btn">Estimer auto</button>
+                        </div>
+                        <div id="sub-apl" class="sub-box hidden">
+                            <div class="field-header">
+                                <label for="input-apl-montant" class="field-label">Montant APL mensuel</label>
+                                <span id="val-apl-montant" class="field-value">180 €</span>
+                            </div>
+                            <input id="input-apl-montant" type="range" min="30" max="500" step="10" value="180">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="toggle-row">
+                            <label for="input-rsa-prime">
+                                <input id="input-rsa-prime" type="checkbox">
+                                Bénéficiaire RSA / Prime d'activité
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="toggle-row">
+                            <label for="input-aah">
+                                <input id="input-aah" type="checkbox">
+                                Bénéficiaire AAH (handicap)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="toggle-row">
+                            <label for="input-etudiant-detache">
+                                <input id="input-etudiant-detache" type="checkbox">
+                                Étudiant détaché du foyer / boursier
+                            </label>
+                        </div>
+                        <div id="sub-bourse" class="sub-box hidden">
+                            <div class="field-header">
+                                <label for="input-bourse-montant" class="field-label">Bourse / aides mensuelles actuelles</label>
+                                <span id="val-bourse-montant" class="field-value">350 €</span>
+                            </div>
+                            <input id="input-bourse-montant" type="range" min="0" max="1000" step="25" value="350">
+                            <p class="field-hint">Utilisé pour calculer le complément éventuel d'une garantie d'autonomie jeune.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordéon 3 : Sécurité sociale & Santé -->
+            <div class="accordion-item" data-acc="sante">
+                <button type="button" class="accordion-trigger" aria-expanded="false">
+                    <div class="accordion-title-wrap">
+                        <span class="accordion-title">
+                            <span class="accordion-step">3</span>
+                            Sécurité sociale &amp; Santé
+                        </span>
+                        <span id="sum-sante" class="accordion-summary">Mutuelle : 65 € • Soins : Moyenne</span>
+                    </div>
+                    <svg class="accordion-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="field">
+                        <div class="field-header">
+                            <label for="input-mutuelle" class="field-label">Coût mensuel de votre mutuelle</label>
+                            <span id="val-mutuelle" class="field-value">65 €</span>
+                        </div>
+                        <input id="input-mutuelle" type="range" min="0" max="250" step="5" value="65">
+                        <div class="range-marks"><span>0 €</span><span>125 €</span><span>250 €</span></div>
+                        <p class="field-hint">Part mensuelle effectivement payée par votre foyer.</p>
+                    </div>
+
+                    <div class="field">
+                        <span class="field-label" style="display:block;margin-bottom:6px;">Fréquence de soins (reste à charge estimé)</span>
+                        <div class="btn-group btn-group-3">
+                            <button type="button" class="choice-btn" data-soins="faible">Faible (~10 €/m)</button>
+                            <button type="button" class="choice-btn" data-soins="moyenne">Moyenne (~25 €/m)</button>
+                            <button type="button" class="choice-btn" data-soins="elevee">Élevée (~60 €/m)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordéon 4 : Logement, Énergie & Courses -->
+            <div class="accordion-item" data-acc="logement">
+                <button type="button" class="accordion-trigger" aria-expanded="false">
+                    <div class="accordion-title-wrap">
+                        <span class="accordion-title">
+                            <span class="accordion-step">4</span>
+                            Logement, Énergie &amp; Courses
+                        </span>
+                        <span id="sum-logement" class="accordion-summary">Locataire privé • Énergie 130 € • Courses 350 €</span>
+                    </div>
+                    <svg class="accordion-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="field">
+                        <label for="input-logement" class="field-label">Statut logement</label>
+                        <select id="input-logement" class="select-input">
+                            <option value="locataire_prive">Locataire (parc privé)</option>
+                            <option value="locataire_hlm">Locataire HLM (logement social)</option>
+                            <option value="proprietaire">Propriétaire</option>
+                        </select>
+                    </div>
+
+                    <div id="wrap-loyer" class="field">
+                        <div class="field-header">
+                            <label for="input-loyer" class="field-label">Loyer mensuel</label>
+                            <span id="val-loyer" class="field-value">750 €</span>
+                        </div>
+                        <input id="input-loyer" type="range" min="200" max="2500" step="25" value="750">
+                    </div>
+
+                    <div class="field">
+                        <div class="field-header">
+                            <label for="input-energie" class="field-label">Facture énergie mensuelle (élec./gaz)</label>
+                            <span id="val-energie" class="field-value">130 €</span>
+                        </div>
+                        <input id="input-energie" type="range" min="20" max="450" step="10" value="130">
+                    </div>
+
+                    <div class="field">
+                        <div class="field-header">
+                            <label for="input-courses" class="field-label">Budget courses alimentaires mensuel</label>
+                            <span id="val-courses" class="field-value">350 €</span>
+                        </div>
+                        <input id="input-courses" type="range" min="100" max="1200" step="25" value="350">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordéon 5 : Transports -->
+            <div class="accordion-item" data-acc="transports">
+                <button type="button" class="accordion-trigger" aria-expanded="false">
+                    <div class="accordion-title-wrap">
+                        <span class="accordion-title">
+                            <span class="accordion-step">5</span>
+                            Transports
+                        </span>
+                        <span id="sum-transports" class="accordion-summary">Carburant : 120 €/m • TC : 0 €/m</span>
+                    </div>
+                    <svg class="accordion-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="field">
+                        <div class="field-header">
+                            <label for="input-carburant" class="field-label">Budget carburant mensuel (voiture thermique)</label>
+                            <span id="val-carburant" class="field-value">120 €</span>
+                        </div>
+                        <input id="input-carburant" type="range" min="0" max="450" step="10" value="120">
+                        <div class="range-marks"><span>0 €</span><span>225 €</span><span>450 €</span></div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-header">
+                            <label for="input-tc" class="field-label">Abonnement transports en commun</label>
+                            <span id="val-tc" class="field-value">0 €</span>
+                        </div>
+                        <input id="input-tc" type="range" min="0" max="200" step="5" value="0">
+                        <div class="range-marks"><span>0 €</span><span>100 €</span><span>200 €</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- COLONNE DROITE : SÉLECTEUR & COMPARATEUR -->
+        <div class="results-column">
+            <!-- Sélecteur de candidats -->
+            <section class="panel selector-panel" aria-label="Sélection des candidats déclarés 2027">
+                <div class="selector-top">
+                    <div>
+                        <h2>Candidats déclarés pour 2027 (ordre alphabétique)</h2>
+                        <p>Comparez 2 candidats côte à côte ou affichez l'ensemble des 10 candidats déclarés.</p>
+                    </div>
+                    <span id="selection-counter" class="badge-counter">2 / 2 sélectionnés</span>
+                </div>
+
+                <div class="selector-controls">
+                    <div class="search-wrap">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/>
+                        </svg>
+                        <input id="input-search-cand" type="search" class="search-input" placeholder="Filtrer par nom ou mouvement..." aria-label="Filtrer les candidats">
+                    </div>
+                    <button id="btn-toggle-mode" type="button" class="btn btn-sm">Tout afficher (10)</button>
+                </div>
+
+                <div id="candidate-pills" class="pills-grid"></div>
+
+                <div class="legend-row">
+                    <span class="legend-item"><span class="status-dot dot-full"></span> Programme 2027 publié</span>
+                    <span class="legend-item"><span class="status-dot dot-part"></span> Propositions partielles 2027</span>
+                </div>
+            </section>
+
+            <!-- Cartes comparatives -->
+            <section id="results-container" class="comparison-grid two-cols" aria-label="Résultats de la simulation par candidat"></section>
+
+            <!-- Encadré pédagogique -->
+            <section class="panel info-card">
+                <h3>Rappels de lecture et limites du simulateur</h3>
+                <ul>
+                    <li><strong>Effets directs uniquement :</strong> un gain (<strong>+</strong>) ou une perte (<strong>−</strong>) mesure uniquement l'effet mécanique direct d'une proposition chiffrée sur votre profil, sans préjuger des effets économiques indirects (croissance, inflation, emploi, financement public).</li>
+                    <li><strong>Mesures non précisées :</strong> l'absence de chiffre sur un domaine signifie simplement que le candidat n'a pas encore publié de barème ou de montant chiffré au 26 novembre 2026 ; cela ne présage pas de son programme définitif.</li>
+                    <li><strong>Vérification ouverte :</strong> chaque formule de calcul est consultable en un clic dans l'accordéon <em>« Voir les formules de calcul exactes »</em> et l'ensemble des données peut être inspecté ou mis à jour via <em>« Gérer programmes.json / Mettre à jour »</em>.</li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span>Simulateur Citoyen 2027 — Application 100 % autonome exécutée localement dans votre navigateur.</span>
+            <span>Aucune donnée personnelle collectée • Aucun suivi publicitaire • Code source modifiable.</span>
+        </div>
+    </footer>
+
+    <!-- ======================================================================
+         MODALE : GESTIONNAIRE programmes.json & SOURCES OUVERTES (3 ONGLETS)
+    ====================================================================== -->
+    <div id="json-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-title">Gérer programmes.json / Mettre à jour</h2>
+                    <p>Inspectez, éditez, importez ou exportez les données 2027 (sauvegarde locale dans votre navigateur).</p>
+                </div>
+                <button id="btn-close-modal" type="button" class="btn btn-sm" aria-label="Fermer la fenêtre">Fermer ✕</button>
+            </div>
+
+            <div class="modal-tabs" role="tablist">
+                <button id="tab-editor" type="button" class="modal-tab active" role="tab" aria-selected="true">1. Éditeur JSON</button>
+                <button id="tab-add" type="button" class="modal-tab" role="tab" aria-selected="false">2. Ajouter un candidat</button>
+                <button id="tab-opendata" type="button" class="modal-tab" role="tab" aria-selected="false">3. Sources ouvertes (data.gouv.fr)</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Onglet 1 : Éditeur JSON -->
+                <div id="panel-editor">
+                    <div class="modal-toolbar">
+                        <div class="toolbar-group">
+                            <label class="btn btn-sm" style="cursor:pointer;">
+                                Importer un fichier .json
+                                <input id="input-import-json" type="file" accept=".json,application/json" class="hidden">
+                            </label>
+                            <button id="btn-download-json" type="button" class="btn btn-sm">Exporter programmes.json</button>
+                            <button id="btn-copy-json" type="button" class="btn btn-sm">Copier le JSON</button>
+                        </div>
+                        <button id="btn-restore-defaults" type="button" class="btn btn-sm">Restaurer les données 2027 par défaut</button>
+                    </div>
+
+                    <div id="json-error" class="alert-box hidden"></div>
+
+                    <textarea id="json-textarea" class="json-editor" spellcheck="false" aria-label="Contenu JSON des candidats"></textarea>
+
+                    <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+                        <button id="btn-apply-json" type="button" class="btn btn-primary">Valider et appliquer le JSON</button>
+                    </div>
+                </div>
+
+                <!-- Onglet 2 : Ajouter un candidat -->
+                <div id="panel-add" class="hidden">
+                    <form id="add-candidate-form">
+                        <div class="form-grid form-grid-2">
+                            <div>
+                                <label class="field-label" for="add-nom">Prénom et Nom complet *</label>
+                                <input id="add-nom" type="text" class="text-input" required placeholder="Ex : Nathalie Arthaud">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-nom-famille">Nom de famille (pour tri alphabétique) *</label>
+                                <input id="add-nom-famille" type="text" class="text-input" required placeholder="Ex : Arthaud">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-mouvement">Mouvement / Parti *</label>
+                                <input id="add-mouvement" type="text" class="text-input" required placeholder="Ex : Lutte Ouvrière">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-statut">Statut du programme</label>
+                                <select id="add-statut" class="select-input">
+                                    <option value="partiel">Propositions partielles 2027</option>
+                                    <option value="publie">Programme 2027 publié</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-source-label">Source et date de référence *</label>
+                                <input id="add-source-label" type="text" class="text-input" required placeholder="Ex : Programme officiel, déc. 2026">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-source-url">URL de la source (optionnel)</label>
+                                <input id="add-source-url" type="url" class="text-input" placeholder="https://...">
+                            </div>
+                        </div>
+
+                        <div class="form-section-title">Paramètres chiffrés directs (laisser vide = « Mesure non précisée »)</div>
+                        <div class="form-grid form-grid-3">
+                            <div>
+                                <label class="field-label" for="add-smic">SMIC net cible (€/mois)</label>
+                                <input id="add-smic" type="number" class="number-input" placeholder="Ex : 1650">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-impot">Variation impôt (%)</label>
+                                <input id="add-impot" type="number" step="0.5" class="number-input" placeholder="0 = aucune hausse">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-retraite">Âge légal retraite (ans)</label>
+                                <input id="add-retraite" type="number" min="55" max="70" class="number-input" placeholder="Ex : 60">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-apl">Variation APL (%)</label>
+                                <input id="add-apl" type="number" step="1" class="number-input" placeholder="Ex : 10">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-tva-energie">Delta TVA énergie (pts)</label>
+                                <input id="add-tva-energie" type="number" step="0.5" class="number-input" placeholder="Ex : -14.5 (20→5,5%)">
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-carburant">Delta carburant TTC (%)</label>
+                                <input id="add-carburant" type="number" step="0.1" class="number-input" placeholder="Ex : -12.1">
+                            </div>
+                        </div>
+
+                        <div class="form-section-title">Mesure qualitative (optionnel)</div>
+                        <div class="form-grid form-grid-2">
+                            <div>
+                                <label class="field-label" for="add-qual-theme">Thématique</label>
+                                <select id="add-qual-theme" class="select-input">
+                                    <option value="Travail">Travail</option>
+                                    <option value="CAF">CAF</option>
+                                    <option value="Sécu">Sécu</option>
+                                    <option value="Retraite">Retraite</option>
+                                    <option value="Logement">Logement</option>
+                                    <option value="Énergie">Énergie</option>
+                                    <option value="Éducation">Éducation</option>
+                                    <option value="Famille">Famille</option>
+                                    <option value="Impôts">Impôts</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="field-label" for="add-qual-texte">Description factuelle de la mesure</label>
+                                <input id="add-qual-texte" type="text" class="text-input" placeholder="Ex : Indexation des salaires et pensions sur l'inflation.">
+                            </div>
+                        </div>
+
+                        <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+                            <button type="submit" class="btn btn-primary">Ajouter ce candidat</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Onglet 3 : Sources ouvertes (data.gouv.fr) -->
+                <div id="panel-opendata" class="hidden">
+                    <div class="opendata-card">
+                        <h3>Mettre à jour le simulateur avec les données ouvertes (data.gouv.fr)</h3>
+                        <p>
+                            Entre novembre 2026 et la clôture des parrainages le <strong>12 mars 2027</strong> (puis jusqu'au 1er tour du <strong>18 avril 2027</strong>), les programmes présidentiels évoluent chaque semaine. Des jeux de données citoyens et institutionnels publiés sous <strong>Licence Ouverte 2.0</strong> sur <span class="code-inline">data.gouv.fr</span> recensent de manière structurée et sourcée les propositions des candidats déclarés thème par thème.
+                        </p>
+                        <ol class="opendata-steps">
+                            <li><strong>Consulter les jeux de données ouverts :</strong> rendez-vous sur <a href="https://www.data.gouv.fr/fr/search/?q=pr%C3%A9sidentielle+2027+programmes" target="_blank" rel="noopener noreferrer" style="color:var(--slate-blue);font-weight:600;">data.gouv.fr (recherche « présidentielle 2027 programmes ») ↗</a> et les sites officiels de campagne pour vérifier les nouveaux chiffrages publiés.</li>
+                            <li><strong>Exporter le modèle actuel :</strong> dans l'onglet <em>« 1. Éditeur JSON »</em>, cliquez sur <strong>Exporter programmes.json</strong> afin de récupérer la structure exacte attendue par ce simulateur.</li>
+                            <li><strong>Importer en 1 clic sans toucher au code HTML :</strong> après mise à jour du fichier JSON (ou partage d'un fichier communautaire mis à jour), cliquez sur <strong>Importer un fichier .json</strong> puis sur <strong>Valider et appliquer le JSON</strong>.</li>
+                        </ol>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px;">
+                            <button id="btn-goto-import" type="button" class="btn btn-primary btn-sm">Importer un fichier programmes.json maintenant</button>
+                            <span style="font-size:0.76rem;color:var(--text-muted);">Les modifications sont enregistrées localement dans votre navigateur.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteneur de notifications Toast -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <script>
+        /* ============================================================================
+         * 1. CONSTANTES DE RÉFÉRENCE & DONNÉES SOURCÉES DES 10 CANDIDATS 2027
+         * ============================================================================ */
+        const STORAGE_KEY = "simulateur_citoyen_2027_candidats_v1";
+        const REF_SMIC_NET = 1426;        // Repère SMIC net mensuel (€)
+        const REF_AGE_RETRAITE = 64;      // Âge légal actuel de référence (ans)
+        const REF_TVA_ENERGIE = 20;       // Taux normal de TVA sur l'énergie (%)
+        const RESTE_A_CHARGE_SOINS = {
+            faible: 10,
+            moyenne: 25,
+            elevee: 60
+        };
+
+        /**
+         * 10 candidats déclarés pour la présidentielle 2027, strictement sourcés au 26 novembre 2026.
+         * Aucun chiffre inventé : tout poste non chiffré est explicitement à `null`.
+         * Triés automatiquement par ordre alphabétique de `nomFamille`.
+         */
+        const DEFAULT_CANDIDATES_2027 = [
+            {
+                id: "attal-gabriel",
+                nom: "Gabriel Attal",
+                nomFamille: "Attal",
+                mouvement: "Renaissance",
+                statutProgramme: "partiel", // "publie" | "partiel"
+                sourceLabel: "attalpresident.fr (nov. 2026)",
+                sourceUrl: "https://attalpresident.fr",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: 0,
+                    noteImpot: "Engagement « aucune hausse d'impôts pendant 5 ans »",
+                    ageRetraite: null,
+                    noteRetraite: "Suppression de l'âge légal au profit de la durée de cotisation",
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Famille", texte: "1 000 € versés par l'État à chaque nouveau-né ; création d'un Livret garde d'enfant pour financer des places en crèche.", conditions: { minEnfants: 1 } },
+                    { theme: "CAF", texte: "Création d'une carte famille monoparentale et versement automatique des pensions alimentaires.", conditions: { famille: ["monoparentale"] } },
+                    { theme: "CAF", texte: "Gel envisagé de certaines prestations sociales hors petites retraites.", conditions: {} },
+                    { theme: "Énergie", texte: "Stabilité des prix de l'électricité sur 5 ans et mise en place d'un bouclier tarifaire sur l'eau.", conditions: {} },
+                    { theme: "Sécu", texte: "Objectif d'équilibre des comptes de la Sécurité sociale en 3 ans.", conditions: {} },
+                    { theme: "Éducation", texte: "Moins de 20 élèves par classe en primaire d'ici 5 ans et contrat entreprise pour chaque lycéen professionnel.", conditions: { minEnfants: 1 } },
+                    { theme: "Travail", texte: "Encouragement de la semaine en 4 jours pour les métiers non télétravaillables.", conditions: { statut: ["salarie", "fonctionnaire", "independant"] } }
+                ]
+            },
+            {
+                id: "glucksmann-raphael",
+                nom: "Raphaël Glucksmann",
+                nomFamille: "Glucksmann",
+                mouvement: "Place Publique",
+                statutProgramme: "partiel",
+                sourceLabel: "Débats & comparateurs (nov. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: null,
+                    ageRetraite: 62,
+                    noteRetraite: "62 ans (43 annuités + rétablissement des critères de pénibilité)",
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: true,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Énergie", texte: "Chèque énergie élargi à 16 millions de familles de classe moyenne (500 €/an pour 6 M de foyers, 200 €/an pour 10 M).", conditions: {} },
+                    { theme: "Famille", texte: "Création d'un statut spécifique pour les familles monoparentales (priorité garde d'enfants, caution logement, transports).", conditions: { famille: ["monoparentale"] } },
+                    { theme: "Retraite", texte: "Retour à l'âge légal de 62 ans avec rétablissement des critères de pénibilité et trimestres pour métiers exposés.", conditions: { statut: ["salarie", "fonctionnaire", "independant", "demandeur", "etudiant"] } },
+                    { theme: "Impôts", texte: "Taxation renforcée des très hauts patrimoines.", conditions: {} }
+                ]
+            },
+            {
+                id: "lepen-marine",
+                nom: "Marine Le Pen",
+                nomFamille: "Le Pen",
+                mouvement: "Rassemblement National",
+                statutProgramme: "publie",
+                sourceLabel: "Propositions 2027 publiées (oct.-nov. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: null,
+                    ageRetraite: 62,
+                    noteRetraite: "62 ans (et 60 ans si début avant 20 ans avec 40 annuités)",
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: -14.5,
+                    carburantDeltaPct: -12.1,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: true,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Énergie", texte: "Baisse de la TVA sur l'électricité, le gaz, le fioul et les carburants de 20 % à 5,5 %.", conditions: {} },
+                    { theme: "Impôts", texte: "Part fiscale pleine dès le 2e enfant et demi-part fiscale pour les veufs et veuves.", conditions: { minEnfants: 2 } },
+                    { theme: "Retraite", texte: "Abrogation de la réforme Borne dès 2028, retour à 62 ans (60 ans pour carrières commencées avant 20 ans).", conditions: {} },
+                    { theme: "CAF", texte: "AAH garantie au-dessus du seuil de pauvreté.", conditions: { aah: true } },
+                    { theme: "CAF", texte: "Prestations familiales réservées aux foyers ayant au moins un parent de nationalité française.", conditions: {} },
+                    { theme: "Sécu", texte: "Remplacement de l'Aide Médicale d'État (AME) par une Aide Médicale d'Urgence (AMU).", conditions: {} }
+                ]
+            },
+            {
+                id: "lisnard-david",
+                nom: "David Lisnard",
+                nomFamille: "Lisnard",
+                mouvement: "Nouvelle Énergie",
+                statutProgramme: "publie",
+                sourceLabel: "Propositions 2027 publiées (janv.-oct. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: null,
+                    ageRetraite: 65,
+                    noteRetraite: "Socle par répartition dès 65 ans + transition progressive (~40 % capitalisation)",
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: 400,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Travail", texte: "Baisse massive des cotisations sociales financée par 200 Md€ d'économies publiques (120 Md€ rendus aux actifs en salaire net).", conditions: { statut: ["salarie", "independant"] } },
+                    { theme: "Retraite", texte: "Socle minimal par répartition dès 65 ans complété par une transition progressive vers la capitalisation (environ 40 %).", conditions: {} },
+                    { theme: "CAF", texte: "Plafonnement des revenus sociaux et lutte contre les doublons administratifs.", conditions: {} },
+                    { theme: "Impôts", texte: "Baisse générale des prélèvements obligatoires et refus du rétablissement de l'ISF.", conditions: {} }
+                ]
+            },
+            {
+                id: "melenchon-jean-luc",
+                nom: "Jean-Luc Mélenchon",
+                nomFamille: "Mélenchon",
+                mouvement: "La France Insoumise",
+                statutProgramme: "publie",
+                sourceLabel: "Programme « L'Avenir en commun » éd. 2027 (6 nov. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: 1700,
+                    tauxImpotDelta: null,
+                    ageRetraite: 60,
+                    noteRetraite: "Retour immédiat à 62 ans puis 60 ans (40 annuités)",
+                    aplDeltaPct: 10,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: true,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: 1337,
+                    trancheGratuiteEnergiePct: -15,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Travail", texte: "SMIC porté immédiatement à 1 700 € net et indexation des salaires sur l'inflation.", conditions: { statut: ["salarie", "fonctionnaire"] } },
+                    { theme: "CAF", texte: "Revalorisation des APL de +10 % ; garantie d'autonomie de 1 337 €/mois pour les jeunes détachés ; AAH alignée sur le SMIC.", conditions: {} },
+                    { theme: "Sécu", texte: "Remboursement à 100 % des soins (Sécurité sociale intégrale), suppression des jours de carence et indemnisation à 100 % des arrêts maladie.", conditions: {} },
+                    { theme: "Énergie", texte: "Blocage des prix des produits de première nécessité et première tranche gratuite d'électricité, eau et gaz.", conditions: {} },
+                    { theme: "Retraite", texte: "Retour à 60 ans (40 annuités), pension minimale carrière complète au SMIC et minimum vieillesse à 1 337 €.", conditions: {} }
+                ]
+            },
+            {
+                id: "philippe-edouard",
+                nom: "Édouard Philippe",
+                nomFamille: "Philippe",
+                mouvement: "Horizons",
+                statutProgramme: "partiel",
+                sourceLabel: "Propositions partielles 2027 (nov. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: null,
+                    ageRetraite: 65,
+                    noteRetraite: "Relèvement progressif à 65 ans et 45 annuités en moins de 10 ans",
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Retraite", texte: "Relèvement progressif de l'âge légal à 65 ans et 45 annuités en moins de 10 ans, sans hausse de cotisations ni baisse de pensions.", conditions: {} },
+                    { theme: "Retraite", texte: "Maintien des départs anticipés santé/handicap (55, 60 et 62 ans) et développement de la retraite progressive.", conditions: {} },
+                    { theme: "Impôts", texte: "Règle d'or budgétaire et rétablissement des comptes publics par la maîtrise de la dépense.", conditions: {} },
+                    { theme: "Travail", texte: "Facilitation du cumul emploi-retraite.", conditions: { statut: ["retraite", "salarie", "independant"] } }
+                ]
+            },
+            {
+                id: "retailleau-bruno",
+                nom: "Bruno Retailleau",
+                nomFamille: "Retailleau",
+                mouvement: "Les Républicains",
+                statutProgramme: "publie",
+                sourceLabel: "Programme 2027, 165 mesures (oct.-nov. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: 0,
+                    noteImpot: "Plan de 197 Md€ d'économies sans hausse d'impôts (51 Md€ rendus aux ménages et entreprises)",
+                    ageRetraite: 63,
+                    noteRetraite: "63 ans + compte épargne retraite individuel volontaire",
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Retraite", texte: "Âge légal fixé à 63 ans et création d'un étage de capitalisation volontaire (compte épargne retraite individuel, crédit d'impôt de 30 % pour les non-imposables).", conditions: {} },
+                    { theme: "Impôts", texte: "Plan de 197 Md€ d'économies d'ici 2032 sans aucune hausse d'impôts (51 Md€ rendus aux ménages et entreprises).", conditions: {} },
+                    { theme: "Services publics", texte: "Non-remplacement de 400 000 fonctionnaires partant à la retraite et suppression de 1 153 agences et opérateurs publics.", conditions: {} }
+                ]
+            },
+            {
+                id: "roussel-fabien",
+                nom: "Fabien Roussel",
+                nomFamille: "Roussel",
+                mouvement: "Parti Communiste Français",
+                statutProgramme: "partiel",
+                sourceLabel: "Propositions partielles 2027 (août-nov. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: null,
+                    ageRetraite: 60,
+                    noteRetraite: "60 ans avec 37,5 annuités",
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "Retraite", texte: "Retraite à 60 ans avec 37,5 annuités et revalorisation des pensions pour qu'aucune retraite ne soit inférieure au SMIC.", conditions: {} },
+                    { theme: "Note", texte: "Programme complet 2027 en cours de publication — autres postes non encore chiffrés.", conditions: {} }
+                ]
+            },
+            {
+                id: "tondelier-marine",
+                nom: "Marine Tondelier",
+                nomFamille: "Tondelier",
+                mouvement: "Les Écologistes",
+                statutProgramme: "publie",
+                sourceLabel: "Programme « Pour une prospérité écologique », 218 mesures (juil. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: 1580,
+                    tauxImpotDelta: null,
+                    ageRetraite: 62,
+                    noteRetraite: "Retour immédiat à 62 ans puis objectif 60 ans",
+                    aplDeltaPct: 10,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: true
+                },
+                mesuresQualitatives: [
+                    { theme: "Travail", texte: "SMIC à 2 000 € brut (~1 580 € net) dès 2027, indexation du point d'indice des fonctionnaires et congé climatique de 5 jours/an.", conditions: { statut: ["salarie", "fonctionnaire"] } },
+                    { theme: "CAF", texte: "Revalorisation des APL de +10 %, allocations familiales dès le 1er enfant, garantie d'autonomie en remplacement du RSA et statut famille monoparentale.", conditions: {} },
+                    { theme: "Logement", texte: "Généralisation de l'encadrement des loyers et relance de la construction de logements sociaux.", conditions: { logement: ["locataire_prive", "locataire_hlm"] } },
+                    { theme: "Énergie", texte: "Encadrement des prix d'un panier de biens essentiels (énergie, eau, alimentation, transport) et « TVA verte ».", conditions: {} },
+                    { theme: "Impôts", texte: "Rétablissement de l'ISF et instauration de la taxe Zucman (2 % sur les patrimoines > 100 M€).", conditions: {} },
+                    { theme: "Retraite", texte: "Abrogation de la réforme Borne, retour à 62 ans puis objectif 60 ans.", conditions: {} }
+                ]
+            },
+            {
+                id: "zemmour-eric",
+                nom: "Éric Zemmour",
+                nomFamille: "Zemmour",
+                mouvement: "Reconquête",
+                statutProgramme: "partiel",
+                sourceLabel: "Propositions partielles 2027 (nov. 2026)",
+                sourceUrl: "",
+                parametres: {
+                    smicNet: null,
+                    tauxImpotDelta: null,
+                    ageRetraite: null,
+                    noteRetraite: null,
+                    aplDeltaPct: null,
+                    tvaEnergieDelta: null,
+                    carburantDeltaPct: null,
+                    secuRemboursement100: false,
+                    chequeEnergieClasseMoyenne: false,
+                    partFiscaleDes2eEnfant: false,
+                    bonusCotisationsSalarieForfait: null,
+                    bourseAutonomieJeune: null,
+                    trancheGratuiteEnergiePct: null,
+                    allocDes1erEnfant: false
+                },
+                mesuresQualitatives: [
+                    { theme: "CAF", texte: "Suppression des aides sociales non contributives (RSA, allocations familiales, APL) pour les étrangers ; limitation du versement du RSA à 3 ans.", conditions: {} },
+                    { theme: "Impôts", texte: "Plan de baisse de 280 Md€ de dépenses publiques accompagné de baisses d'impôts (barème détaillé non encore publié).", conditions: {} },
+                    { theme: "Note", texte: "Programme complet 2027 en cours de finalisation — postes chiffrés non encore détaillés.", conditions: {} }
+                ]
+            }
+        ];
+
+        /* ============================================================================
+         * 2. PROFIL PAR DÉFAUT & 4 PROFILS TYPES RAPIDES
+         * ============================================================================ */
+        const DEFAULT_PROFILE = {
+            statut: "salarie",
+            age: 35,
+            famille: "celibataire", // celibataire | couple | monoparentale
+            enfants: 0,
+            revenu: 1900,
+            aplOui: false,
+            aplMontant: 180,
+            rsaPrimeOui: false,
+            aahOui: false,
+            etudiantDetacheOui: false,
+            bourseMontant: 350,
+            mutuelle: 65,
+            soins: "moyenne", // faible | moyenne | elevee
+            logement: "locataire_prive", // locataire_prive | locataire_hlm | proprietaire
+            loyer: 750,
+            energie: 130,
+            courses: 350,
+            carburant: 120,
+            tc: 0
+        };
+
+        const PRESETS = {
+            smic: {
+                statut: "salarie",
+                age: 29,
+                famille: "celibataire",
+                enfants: 0,
+                revenu: REF_SMIC_NET,
+                aplOui: true,
+                aplMontant: 160,
+                rsaPrimeOui: true,
+                aahOui: false,
+                etudiantDetacheOui: false,
+                bourseMontant: 0,
+                mutuelle: 50,
+                soins: "moyenne",
+                logement: "locataire_prive",
+                loyer: 650,
+                energie: 100,
+                courses: 275,
+                carburant: 90,
+                tc: 40
+            },
+            famille: {
+                statut: "salarie",
+                age: 38,
+                famille: "couple",
+                enfants: 2,
+                revenu: 3400,
+                aplOui: false,
+                aplMontant: 0,
+                rsaPrimeOui: false,
+                aahOui: false,
+                etudiantDetacheOui: false,
+                bourseMontant: 0,
+                mutuelle: 120,
+                soins: "moyenne",
+                logement: "locataire_prive",
+                loyer: 1150,
+                energie: 190,
+                courses: 650,
+                carburant: 200,
+                tc: 50
+            },
+            etudiant: {
+                statut: "etudiant",
+                age: 21,
+                famille: "celibataire",
+                enfants: 0,
+                revenu: 550,
+                aplOui: true,
+                aplMontant: 210,
+                rsaPrimeOui: false,
+                aahOui: false,
+                etudiantDetacheOui: true,
+                bourseMontant: 450,
+                mutuelle: 35,
+                soins: "faible",
+                logement: "locataire_prive",
+                loyer: 480,
+                energie: 60,
+                courses: 225,
+                carburant: 0,
+                tc: 35
+            },
+            retraite: {
+                statut: "retraite",
+                age: 70,
+                famille: "celibataire",
+                enfants: 0,
+                revenu: 1750,
+                aplOui: false,
+                aplMontant: 0,
+                rsaPrimeOui: false,
+                aahOui: false,
+                etudiantDetacheOui: false,
+                bourseMontant: 0,
+                mutuelle: 135,
+                soins: "elevee",
+                logement: "proprietaire",
+                loyer: 0,
+                energie: 170,
+                courses: 350,
+                carburant: 100,
+                tc: 20
+            }
+        };
+
+        /* ============================================================================
+         * 3. ÉTAT APPLICATIF & TRI STRICT PAR NOM DE FAMILLE
+         * ============================================================================ */
+        function sortCandidates(list) {
+            return JSON.parse(JSON.stringify(list)).sort((a, b) => {
+                const keyA = a.nomFamille || a.nom || "";
+                const keyB = b.nomFamille || b.nom || "";
+                return keyA.localeCompare(keyB, "fr", { sensitivity: "base" });
+            });
+        }
+
+        function loadCandidates() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        return sortCandidates(parsed);
+                    }
+                }
+            } catch (e) {
+                // Fallback silencieux si localStorage indisponible
+            }
+            return sortCandidates(DEFAULT_CANDIDATES_2027);
+        }
+
+        function saveCandidates(list) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            } catch (e) {
+                // Ignorer si restriction iFrame
+            }
+        }
+
+        const state = {
+            profile: { ...DEFAULT_PROFILE },
+            candidates: loadCandidates(),
+            selectedIds: [],
+            showAll: false,
+            searchQuery: "",
+            openFormulas: {},
+            restoreArmed: false
+        };
+
+        // Sélection initiale par défaut : les 2 premiers par ordre alphabétique
+        state.selectedIds = state.candidates.slice(0, 2).map(c => c.id);
+
+        /* ============================================================================
+         * 4. ESTIMATION AUTOMATIQUE DES APL
+         * ============================================================================ */
+        function estimateAutoApl(profile) {
+            if (profile.logement === "proprietaire") return 0;
+            const seuil = 1650 + (profile.famille === "couple" ? 500 : 0) + profile.enfants * 350;
+            if (profile.revenu >= seuil) return 0;
+            const ratio = Math.max(0, (seuil - profile.revenu) / seuil);
+            const base = Math.min(profile.loyer * 0.45, 380);
+            return Math.max(40, Math.round((base * ratio) / 10) * 10);
+        }
+
+        /* ============================================================================
+         * 5. MOTEUR DE CALCUL TRANSPARENT (EFFETS DIRECTS CHIFFRÉS UNIQUEMENT)
+         * ============================================================================ */
+        function simulateCandidate(profile, cand) {
+            const p = cand.parametres || {};
+            const formules = [];
+
+            /* ------------------------------------------------------------------------
+             * DOMAINE 1 : REVENUS & IMPÔTS
+             * ---------------------------------------------------------------------- */
+            let revVal = 0;
+            let revHasQuantified = false;
+            const revLines = [];
+
+            // 1a. SMIC net cible
+            if (p.smicNet !== null && p.smicNet !== undefined) {
+                revHasQuantified = true;
+                if (profile.statut === "salarie" || profile.statut === "fonctionnaire") {
+                    if (profile.revenu >= 1100 && profile.revenu < p.smicNet) {
+                        const gain = p.smicNet - profile.revenu;
+                        revVal += gain;
+                        revLines.push(`SMIC net porté à ${fmtEur(p.smicNet)} : ${fmtEur(p.smicNet)} − ${fmtEur(profile.revenu)} = ${fmtSigned(gain)} / mois`);
+                    } else if (profile.revenu > 0 && profile.revenu < 1100) {
+                        const pct = (p.smicNet - REF_SMIC_NET) / REF_SMIC_NET;
+                        const gain = Math.round(profile.revenu * pct);
+                        revVal += gain;
+                        revLines.push(`SMIC proportionnel (temps partiel +${(pct * 100).toFixed(1)} %) : ${fmtEur(profile.revenu)} × ${(pct * 100).toFixed(1)} % = ${fmtSigned(gain)} / mois`);
+                    } else {
+                        revLines.push(`SMIC cible à ${fmtEur(p.smicNet)} : non applicable (revenu du foyer supérieur au seuil).`);
+                    }
+                } else {
+                    revLines.push(`SMIC cible à ${fmtEur(p.smicNet)} : non applicable à votre statut actuel.`);
+                }
+            }
+
+            // 1b. Variation de taux d'impôt
+            if (p.tauxImpotDelta !== null && p.tauxImpotDelta !== undefined) {
+                revHasQuantified = true;
+                if (p.tauxImpotDelta === 0) {
+                    revLines.push(`Impôts : 0 €/mois (${p.noteImpot || "aucune hausse d'impôts annoncée"}).`);
+                } else if (profile.revenu > 0) {
+                    const gain = Math.round(profile.revenu * (-p.tauxImpotDelta / 100));
+                    revVal += gain;
+                    revLines.push(`Variation prélèvements (${p.tauxImpotDelta > 0 ? "+" : ""}${p.tauxImpotDelta} %) : ${fmtEur(profile.revenu)} × ${-p.tauxImpotDelta} % = ${fmtSigned(gain)} / mois`);
+                }
+            }
+
+            // 1c. Part fiscale pleine dès le 2e enfant (Marine Le Pen)
+            if (p.partFiscaleDes2eEnfant) {
+                revHasQuantified = true;
+                if (profile.enfants >= 2 && profile.revenu > 2200) {
+                    const gain = 70;
+                    revVal += gain;
+                    revLines.push(`Part fiscale pleine dès le 2e enfant (estimation mécanique indicative pour ≥ 2 enfants et revenu > 2 200 €) : +70 € / mois`);
+                } else {
+                    revLines.push(`Part fiscale pleine dès le 2e enfant : non applicable (requiert ≥ 2 enfants et un foyer imposable > 2 200 €/mois).`);
+                }
+            }
+
+            // 1d. Objectif baisse de cotisations salariés (David Lisnard)
+            if (p.bonusCotisationsSalarieForfait !== null && p.bonusCotisationsSalarieForfait !== undefined) {
+                revHasQuantified = true;
+                if (profile.statut === "salarie") {
+                    const gain = p.bonusCotisationsSalarieForfait;
+                    revVal += gain;
+                    revLines.push(`Baisse des cotisations sociales (objectif cible moyen affiché à plein déploiement des 120 Md€ pour les salariés) : ${fmtSigned(gain)} / mois`);
+                } else {
+                    revLines.push(`Objectif baisse de cotisations salariés (+${fmtEur(p.bonusCotisationsSalarieForfait)}/mois en moyenne) : non applicable directement à votre statut.`);
+                }
+            }
+
+            if (!revHasQuantified) {
+                revLines.push("Mesure non précisée (aucun chiffrage direct publié sur les revenus ou impôts).");
+            }
+            formules.push({
+                titre: "1. Revenus & Impôts",
+                montant: revHasQuantified ? revVal : null,
+                lignes: revLines
+            });
+
+            /* ------------------------------------------------------------------------
+             * DOMAINE 2 : CAF & FAMILLE
+             * ---------------------------------------------------------------------- */
+            let cafVal = 0;
+            let cafHasQuantified = false;
+            const cafLines = [];
+
+            // 2a. APL
+            if (p.aplDeltaPct !== null && p.aplDeltaPct !== undefined) {
+                cafHasQuantified = true;
+                if (profile.aplOui && profile.aplMontant > 0) {
+                    const gain = Math.round(profile.aplMontant * (p.aplDeltaPct / 100));
+                    cafVal += gain;
+                    cafLines.push(`APL (${p.aplDeltaPct > 0 ? "+" : ""}${p.aplDeltaPct} %) : ${fmtEur(profile.aplMontant)} × ${p.aplDeltaPct} % = ${fmtSigned(gain)} / mois`);
+                } else {
+                    cafLines.push(`Revalorisation APL (${p.aplDeltaPct > 0 ? "+" : ""}${p.aplDeltaPct} %) : non applicable (vous ne percevez pas d'APL).`);
+                }
+            }
+
+            // 2b. Garantie d'autonomie jeune détaché (Jean-Luc Mélenchon)
+            if (p.bourseAutonomieJeune !== null && p.bourseAutonomieJeune !== undefined) {
+                cafHasQuantified = true;
+                if (profile.etudiantDetacheOui || (profile.statut === "etudiant" && profile.age < 26)) {
+                    const baseActuelle = Math.max(profile.bourseMontant, profile.revenu);
+                    const complement = Math.max(0, p.bourseAutonomieJeune - baseActuelle);
+                    cafVal += complement;
+                    cafLines.push(`Garantie d'autonomie jeune (${fmtEur(p.bourseAutonomieJeune)}/mois) : max(0, ${fmtEur(p.bourseAutonomieJeune)} − ${fmtEur(baseActuelle)} ressources/bourse) = ${fmtSigned(complement)} / mois`);
+                } else {
+                    cafLines.push(`Garantie d'autonomie jeune (${fmtEur(p.bourseAutonomieJeune)}/mois) : non applicable (réservée aux jeunes/étudiants détachés).`);
+                }
+            }
+
+            // 2c. Allocations familiales dès le 1er enfant (Marine Tondelier)
+            if (p.allocDes1erEnfant) {
+                cafHasQuantified = true;
+                if (profile.enfants === 1) {
+                    const gain = 75;
+                    cafVal += gain;
+                    cafLines.push(`Allocations familiales dès le 1er enfant (estimation indicative pour 1 enfant) : +75 € / mois`);
+                } else if (profile.enfants >= 2) {
+                    cafLines.push(`Allocations familiales dès le 1er enfant : vous avez déjà ${profile.enfants} enfants (allocations déjà ouvertes à partir de 2 enfants).`);
+                } else {
+                    cafLines.push(`Allocations familiales dès le 1er enfant : non applicable (0 enfant à charge).`);
+                }
+            }
+
+            if (!cafHasQuantified) {
+                cafLines.push("Mesure non précisée (aucun chiffrage direct publié sur les prestations CAF).");
+            }
+            formules.push({
+                titre: "2. CAF & Famille",
+                montant: cafHasQuantified ? cafVal : null,
+                lignes: cafLines
+            });
+
+            /* ------------------------------------------------------------------------
+             * DOMAINE 3 : SÉCURITÉ SOCIALE & SANTÉ
+             * ---------------------------------------------------------------------- */
+            let secuVal = 0;
+            let secuHasQuantified = false;
+            const secuLines = [];
+
+            if (p.secuRemboursement100) {
+                secuHasQuantified = true;
+                const rac = RESTE_A_CHARGE_SOINS[profile.soins] || 25;
+                const gain = profile.mutuelle + rac;
+                secuVal += gain;
+                secuLines.push(`Sécurité sociale intégrale (100 % Sécu) : économie mutuelle (${fmtEur(profile.mutuelle)}) + reste à charge soins estimé (${fmtEur(rac)}) = ${fmtSigned(gain)} / mois`);
+            }
+
+            if (!secuHasQuantified) {
+                secuLines.push("Mesure non précisée (aucun chiffrage direct publié sur le budget santé/mutuelle).");
+            }
+            formules.push({
+                titre: "3. Sécurité sociale & Santé",
+                montant: secuHasQuantified ? secuVal : null,
+                lignes: secuLines
+            });
+
+            /* ------------------------------------------------------------------------
+             * DOMAINE 4 : ÉNERGIE & TRANSPORTS
+             * ---------------------------------------------------------------------- */
+            let enTrVal = 0;
+            let enTrHasQuantified = false;
+            const enTrLines = [];
+
+            // 4a. Chèque énergie classe moyenne (Raphaël Glucksmann)
+            if (p.chequeEnergieClasseMoyenne) {
+                enTrHasQuantified = true;
+                if (profile.revenu <= 2500) {
+                    const gain = 500 / 12;
+                    enTrVal += gain;
+                    enTrLines.push(`Chèque énergie classe moyenne (revenu ≤ 2 500 €) : 500 €/an ÷ 12 = +${gain.toFixed(2).replace(".", ",")} € / mois`);
+                } else if (profile.revenu <= 4500) {
+                    const gain = 200 / 12;
+                    enTrVal += gain;
+                    enTrLines.push(`Chèque énergie classe moyenne (revenu 2 501–4 500 €) : 200 €/an ÷ 12 = +${gain.toFixed(2).replace(".", ",")} € / mois`);
+                } else {
+                    enTrLines.push(`Chèque énergie classe moyenne : non applicable (revenu du foyer > 4 500 €/mois).`);
+                }
+            }
+
+            // 4b. Baisse TVA énergie (ex. Marine Le Pen : -14,5 pts -> 20% à 5,5%)
+            if (p.tvaEnergieDelta !== null && p.tvaEnergieDelta !== undefined) {
+                enTrHasQuantified = true;
+                const tvaCible = Math.max(0, REF_TVA_ENERGIE + p.tvaEnergieDelta);
+                const ratioTtc = 1 - ((1 + tvaCible / 100) / (1 + REF_TVA_ENERGIE / 100));
+                const gain = profile.energie * ratioTtc;
+                enTrVal += gain;
+                enTrLines.push(`TVA énergie (${REF_TVA_ENERGIE} % → ${tvaCible.toString().replace(".", ",")} %, soit ${(ratioTtc * 100).toFixed(1)} % sur TTC) : ${fmtEur(profile.energie)} × ${(ratioTtc * 100).toFixed(1)} % = ${fmtSignedDec(gain)} / mois`);
+            }
+
+            // 4c. Première tranche gratuite énergie (Jean-Luc Mélenchon)
+            if (p.trancheGratuiteEnergiePct !== null && p.trancheGratuiteEnergiePct !== undefined) {
+                enTrHasQuantified = true;
+                const gain = profile.energie * (-p.trancheGratuiteEnergiePct / 100);
+                enTrVal += gain;
+                enTrLines.push(`1re tranche gratuite énergie (estimation indicative ${p.trancheGratuiteEnergiePct} %) : ${fmtEur(profile.energie)} × ${-p.trancheGratuiteEnergiePct} % = ${fmtSignedDec(gain)} / mois`);
+            }
+
+            // 4d. Carburant TTC (ex. Marine Le Pen : -12,1 % via TVA 20% -> 5,5%)
+            if (p.carburantDeltaPct !== null && p.carburantDeltaPct !== undefined) {
+                enTrHasQuantified = true;
+                if (profile.carburant > 0) {
+                    const gain = profile.carburant * (-p.carburantDeltaPct / 100);
+                    enTrVal += gain;
+                    enTrLines.push(`Carburants (${p.carburantDeltaPct} % sur prix TTC) : ${fmtEur(profile.carburant)} × ${-p.carburantDeltaPct} % = ${fmtSignedDec(gain)} / mois`);
+                } else {
+                    enTrLines.push(`Baisse TVA carburants (${p.carburantDeltaPct} %) : non applicable (budget carburant à 0 €).`);
+                }
+            }
+
+            if (!enTrHasQuantified) {
+                enTrLines.push("Mesure non précisée (aucun chiffrage direct publié sur l'énergie ou les transports).");
+            }
+            formules.push({
+                titre: "4. Énergie & Transports",
+                montant: enTrHasQuantified ? Math.round(enTrVal) : null,
+                lignes: enTrLines
+            });
+
+            /* ------------------------------------------------------------------------
+             * TOTAL & RETRAITE
+             * ---------------------------------------------------------------------- */
+            const anyQuantified = revHasQuantified || cafHasQuantified || secuHasQuantified || enTrHasQuantified;
+            const totalMensuel = anyQuantified ? Math.round(revVal + cafVal + secuVal + enTrVal) : null;
+            const totalAnnuel = totalMensuel !== null ? totalMensuel * 12 : null;
+
+            const ageRetraite = (p.ageRetraite === null || p.ageRetraite === undefined) ? null : p.ageRetraite;
+            const ecartRetraite = ageRetraite !== null ? ageRetraite - REF_AGE_RETRAITE : null;
+
+            formules.push({
+                titre: "5. Âge légal de retraite",
+                montant: null,
+                lignes: [
+                    ageRetraite !== null
+                        ? `Âge proposé (${ageRetraite} ans) − Loi actuelle (${REF_AGE_RETRAITE} ans) = ${ecartRetraite > 0 ? "+" : ""}${ecartRetraite} an(s). ${p.noteRetraite ? "(" + p.noteRetraite + ")" : ""}`
+                        : (p.noteRetraite ? p.noteRetraite : "Mesure non précisée.")
+                ]
+            });
+
+            /* ------------------------------------------------------------------------
+             * MESURES QUALITATIVES FILTRÉES DYNAMIQUEMENT SELON LE PROFIL
+             * ---------------------------------------------------------------------- */
+            const qualitatives = (cand.mesuresQualitatives || []).filter(m => {
+                const c = m.conditions;
+                if (!c || Object.keys(c).length === 0) return true;
+                if (c.statut && !c.statut.includes(profile.statut)) return false;
+                if (c.famille && !c.famille.includes(profile.famille)) return false;
+                if (c.logement && !c.logement.includes(profile.logement)) return false;
+                if (typeof c.minEnfants === "number" && profile.enfants < c.minEnfants) return false;
+                if (c.aah === true && !profile.aahOui) return false;
+                return true;
+            });
+
+            return {
+                domaines: [
+                    { key: "revenus", label: "Revenus & Impôts", montant: revHasQuantified ? Math.round(revVal) : null },
+                    { key: "caf", label: "CAF & Famille", montant: cafHasQuantified ? Math.round(cafVal) : null },
+                    { key: "secu", label: "Sécu & Santé", montant: secuHasQuantified ? Math.round(secuVal) : null },
+                    { key: "energie", label: "Énergie & Transports", montant: enTrHasQuantified ? Math.round(enTrVal) : null }
+                ],
+                anyQuantified,
+                totalMensuel,
+                totalAnnuel,
+                ageRetraite,
+                ecartRetraite,
+                noteRetraite: p.noteRetraite || null,
+                qualitatives,
+                formules
+            };
+        }
+
+        /* ============================================================================
+         * 6. UTILITAIRES DE FORMATAGE & TOAST
+         * ============================================================================ */
+        function fmtEur(val) {
+            return new Intl.NumberFormat("fr-FR").format(Math.round(val)) + " €";
+        }
+
+        function fmtSigned(val) {
+            const r = Math.round(val);
+            if (r > 0) return "+" + new Intl.NumberFormat("fr-FR").format(r) + " €";
+            if (r < 0) return "−" + new Intl.NumberFormat("fr-FR").format(Math.abs(r)) + " €";
+            return "0 €";
+        }
+
+        function fmtSignedDec(val) {
+            const rounded = Math.round(val * 10) / 10;
+            if (rounded > 0) return "+" + rounded.toFixed(1).replace(".", ",") + " €";
+            if (rounded < 0) return "−" + Math.abs(rounded).toFixed(1).replace(".", ",") + " €";
+            return "0 €";
+        }
+
+        function esc(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById("toast-container");
+            const el = document.createElement("div");
+            el.className = "toast";
+            el.textContent = msg;
+            container.appendChild(el);
+            setTimeout(() => {
+                el.classList.add("fade-out");
+                setTimeout(() => el.remove(), 260);
+            }, 3000);
+        }
+
+        /* ============================================================================
+         * 7. RENDU DE L'INTERFACE
+         * ============================================================================ */
+        function renderProfileUI() {
+            const p = state.profile;
+
+            // 1. Situation & Revenus
+            document.getElementById("input-statut").value = p.statut;
+            document.getElementById("input-age").value = p.age;
+            document.getElementById("val-age").textContent = `${p.age} ans`;
+            document.querySelectorAll("[data-famille]").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.famille === p.famille);
+            });
+            document.getElementById("val-enfants").textContent = p.enfants;
+            document.getElementById("input-revenu").value = p.revenu;
+            document.getElementById("val-revenu").textContent = fmtEur(p.revenu);
+
+            const statutLabels = {
+                salarie: "Salarié privé", fonctionnaire: "Fonctionnaire", independant: "Indépendant",
+                etudiant: "Étudiant", retraite: "Retraité", demandeur: "Demandeur d'emploi"
+            };
+            document.getElementById("sum-situation").textContent =
+                `${statutLabels[p.statut]}, ${p.age} ans, ${fmtEur(p.revenu)}/mois` + (p.enfants > 0 ? `, ${p.enfants} enf.` : "");
+
+            // 2. CAF & Prestations
+            document.getElementById("input-apl-oui").checked = p.aplOui;
+            document.getElementById("sub-apl").classList.toggle("hidden", !p.aplOui);
+            document.getElementById("input-apl-montant").value = p.aplMontant;
+            document.getElementById("val-apl-montant").textContent = fmtEur(p.aplMontant);
+
+            document.getElementById("input-rsa-prime").checked = p.rsaPrimeOui;
+            document.getElementById("input-aah").checked = p.aahOui;
+            document.getElementById("input-etudiant-detache").checked = p.etudiantDetacheOui;
+            document.getElementById("sub-bourse").classList.toggle("hidden", !p.etudiantDetacheOui);
+            document.getElementById("input-bourse-montant").value = p.bourseMontant;
+            document.getElementById("val-bourse-montant").textContent = fmtEur(p.bourseMontant);
+
+            document.getElementById("sum-caf").textContent =
+                `APL : ${p.aplOui ? fmtEur(p.aplMontant) : "Non"} • RSA/Prime : ${p.rsaPrimeOui ? "Oui" : "Non"} • AAH : ${p.aahOui ? "Oui" : "Non"}`;
+
+            // 3. Santé & Sécu
+            document.getElementById("input-mutuelle").value = p.mutuelle;
+            document.getElementById("val-mutuelle").textContent = fmtEur(p.mutuelle);
+            document.querySelectorAll("[data-soins]").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.soins === p.soins);
+            });
+            const soinsLabels = { faible: "Faible", moyenne: "Moyenne", elevee: "Élevée" };
+            document.getElementById("sum-sante").textContent = `Mutuelle : ${fmtEur(p.mutuelle)} • Soins : ${soinsLabels[p.soins]}`;
+
+            // 4. Logement, Énergie & Courses
+            document.getElementById("input-logement").value = p.logement;
+            document.getElementById("wrap-loyer").classList.toggle("hidden", p.logement === "proprietaire");
+            document.getElementById("input-loyer").value = p.loyer;
+            document.getElementById("val-loyer").textContent = fmtEur(p.loyer);
+            document.getElementById("input-energie").value = p.energie;
+            document.getElementById("val-energie").textContent = fmtEur(p.energie);
+            document.getElementById("input-courses").value = p.courses;
+            document.getElementById("val-courses").textContent = fmtEur(p.courses);
+
+            const logLabels = { locataire_prive: "Locataire privé", locataire_hlm: "Locataire HLM", proprietaire: "Propriétaire" };
+            document.getElementById("sum-logement").textContent = `${logLabels[p.logement]} • Énergie ${fmtEur(p.energie)} • Courses ${fmtEur(p.courses)}`;
+
+            // 5. Transports
+            document.getElementById("input-carburant").value = p.carburant;
+            document.getElementById("val-carburant").textContent = fmtEur(p.carburant);
+            document.getElementById("input-tc").value = p.tc;
+            document.getElementById("val-tc").textContent = fmtEur(p.tc);
+            document.getElementById("sum-transports").textContent = `Carburant : ${fmtEur(p.carburant)}/m • TC : ${fmtEur(p.tc)}/m`;
+        }
+
+        function renderCandidateSelector() {
+            const container = document.getElementById("candidate-pills");
+            const counter = document.getElementById("selection-counter");
+            const toggleBtn = document.getElementById("btn-toggle-mode");
+            const q = state.searchQuery.trim().toLowerCase();
+
+            counter.textContent = state.showAll
+                ? `${state.candidates.length} affichés (mode complet)`
+                : `${state.selectedIds.length} / 2 sélectionné${state.selectedIds.length > 1 ? "s" : ""}`;
+
+            toggleBtn.textContent = state.showAll
+                ? "Comparer 2 candidats"
+                : `Tout afficher (${state.candidates.length})`;
+
+            container.innerHTML = "";
+
+            const filtered = state.candidates.filter(c => {
+                if (!q) return true;
+                return (c.nom || "").toLowerCase().includes(q) || (c.mouvement || "").toLowerCase().includes(q);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<span style="font-size:0.78rem;color:var(--text-muted);">Aucun candidat ne correspond à « ${esc(state.searchQuery)} ».</span>`;
+                return;
+            }
+
+            filtered.forEach(cand => {
+                const isSelected = state.showAll || state.selectedIds.includes(cand.id);
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `cand-pill${isSelected ? " selected" : ""}`;
+                btn.setAttribute("aria-pressed", isSelected ? "true" : "false");
+
+                const dotClass = cand.statutProgramme === "publie" ? "dot-full" : "dot-part";
+                btn.innerHTML = `
+                    <span class="status-dot ${dotClass}" aria-hidden="true"></span>
+                    <span>${esc(cand.nom)}</span>
+                    <span class="cand-pill-party">(${esc(cand.mouvement)})</span>
+                `;
+
+                btn.addEventListener("click", () => {
+                    if (state.showAll) {
+                        state.showAll = false;
+                        state.selectedIds = [cand.id];
+                        renderCandidateSelector();
+                        renderResults();
+                        return;
+                    }
+                    toggleCandidate(cand.id);
+                });
+
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleCandidate(id) {
+            const idx = state.selectedIds.indexOf(id);
+            if (idx !== -1) {
+                state.selectedIds.splice(idx, 1);
+            } else {
+                if (state.selectedIds.length >= 2) {
+                    showToast("Mode comparaison limité à 2 candidats. Désélectionnez-en un ou cliquez sur « Tout afficher ».");
+                    return;
+                }
+                state.selectedIds.push(id);
+            }
+            // Préserver l'ordre alphabétique de nom de famille
+            state.selectedIds.sort((a, b) => {
+                const ca = state.candidates.find(c => c.id === a);
+                const cb = state.candidates.find(c => c.id === b);
+                return (ca?.nomFamille || ca?.nom || "").localeCompare(cb?.nomFamille || cb?.nom || "", "fr", { sensitivity: "base" });
+            });
+            renderCandidateSelector();
+            renderResults();
+        }
+
+        function renderResults() {
+            const container = document.getElementById("results-container");
+            container.innerHTML = "";
+
+            const q = state.searchQuery.trim().toLowerCase();
+            const displayed = state.showAll
+                ? state.candidates.filter(c => !q || (c.nom || "").toLowerCase().includes(q) || (c.mouvement || "").toLowerCase().includes(q))
+                : state.selectedIds.map(id => state.candidates.find(c => c.id === id)).filter(Boolean);
+
+            if (displayed.length === 0) {
+                container.className = "comparison-grid";
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <strong>Aucun candidat sélectionné.</strong>
+                        <p style="margin-top:6px;font-size:0.83rem;">Sélectionnez 1 ou 2 candidats ci-dessus ou cliquez sur « Tout afficher » pour consulter l'ensemble des 10 candidats déclarés.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.className = displayed.length >= 2 ? "comparison-grid two-cols" : "comparison-grid";
+
+            const simulations = displayed.map(cand => ({
+                cand,
+                res: simulateCandidate(state.profile, cand)
+            }));
+
+            // Échelle commune pour les mini-barres
+            let maxAbsDomain = 80;
+            simulations.forEach(({ res }) => {
+                res.domaines.forEach(d => {
+                    if (d.montant !== null && Math.abs(d.montant) > maxAbsDomain) {
+                        maxAbsDomain = Math.abs(d.montant);
+                    }
+                });
+            });
+
+            simulations.forEach(({ cand, res }) => {
+                const card = document.createElement("article");
+                card.className = "result-card";
+                const isOpen = Boolean(state.openFormulas[cand.id]);
+
+                const isPublie = cand.statutProgramme === "publie";
+                const statusBadgeHtml = isPublie
+                    ? `<span class="status-badge status-full">Programme 2027 publié</span>`
+                    : `<span class="status-badge status-part">Propositions partielles 2027</span>`;
+
+                // Bloc impact financier total
+                let impactHtml = "";
+                if (!res.anyQuantified) {
+                    impactHtml = `
+                        <div class="synthesis-none">Aucune mesure chiffrée applicable à votre profil</div>
+                        <div class="synthesis-sub">Voir les mesures qualitatives ci-dessous</div>
+                    `;
+                } else {
+                    const cls = res.totalMensuel > 0 ? "val-gain" : (res.totalMensuel < 0 ? "val-loss" : "val-neutral");
+                    impactHtml = `
+                        <div class="synthesis-big ${cls}">${fmtSigned(res.totalMensuel)} <span style="font-size:0.74rem;font-weight:600;color:var(--text-muted);">/ mois</span></div>
+                        <div class="synthesis-sub">soit <strong>${fmtSigned(res.totalAnnuel)} / an</strong> (effets directs chiffrés)</div>
+                    `;
+                }
+
+                // Bloc retraite
+                let retraiteMain = "Mesure non précisée";
+                let retraiteSub = res.noteRetraite || "Aucun âge légal chiffré publié";
+                let retraiteStyle = "font-size:0.86rem;font-weight:600;color:var(--text-muted);font-style:italic;margin-top:6px;";
+
+                if (res.ageRetraite !== null) {
+                    retraiteMain = `${res.ageRetraite} ans`;
+                    retraiteStyle = "color:var(--text-primary);";
+                    if (state.profile.statut === "retraite") {
+                        retraiteSub = `Déjà retraité${res.noteRetraite ? " • " + res.noteRetraite : ""}`;
+                    } else if (res.ecartRetraite === 0) {
+                        retraiteSub = `Identique à la loi actuelle (${REF_AGE_RETRAITE} ans)`;
+                    } else {
+                        const diffTxt = res.ecartRetraite < 0
+                            ? `−${Math.abs(res.ecartRetraite)} an${Math.abs(res.ecartRetraite) > 1 ? "s" : ""} vs loi actuelle (64 ans)`
+                            : `+${res.ecartRetraite} an${res.ecartRetraite > 1 ? "s" : ""} vs loi actuelle (64 ans)`;
+                        retraiteSub = `${diffTxt}${res.noteRetraite ? " • " + res.noteRetraite : ""}`;
+                    }
+                } else if (res.noteRetraite) {
+                    retraiteMain = "Autre mécanisme";
+                    retraiteStyle = "font-size:0.95rem;font-weight:700;color:var(--slate-blue);margin-top:5px;";
+                }
+
+                // Sous-détail par domaine
+                const domainesHtml = res.domaines.map(d => {
+                    if (d.montant === null) {
+                        return `
+                            <div class="domain-row">
+                                <div class="domain-row-top">
+                                    <span class="domain-name">${esc(d.label)}</span>
+                                    <span class="amount-pill pill-na">Mesure non précisée</span>
+                                </div>
+                                <div class="mini-bar-track" aria-hidden="true">
+                                    <div class="mini-bar-center"></div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    const pillClass = d.montant > 0 ? "pill-gain" : (d.montant < 0 ? "pill-loss" : "pill-neu");
+                    const barClass = d.montant > 0 ? "bar-gain" : (d.montant < 0 ? "bar-loss" : "bar-neu");
+                    const pctWidth = d.montant === 0 ? 0 : Math.min(50, Math.max(3, (Math.abs(d.montant) / maxAbsDomain) * 50));
+                    const leftPos = d.montant >= 0 ? 50 : 50 - pctWidth;
+
+                    return `
+                        <div class="domain-row">
+                            <div class="domain-row-top">
+                                <span class="domain-name">${esc(d.label)}</span>
+                                <span class="amount-pill ${pillClass}">${fmtSigned(d.montant)} / mois</span>
+                            </div>
+                            <div class="mini-bar-track" aria-hidden="true">
+                                <div class="mini-bar-center"></div>
+                                <div class="mini-bar-fill ${barClass}" style="left:${leftPos}%;width:${pctWidth}%;"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                // Mesures qualitatives filtrées
+                const qualHtml = res.qualitatives.length > 0
+                    ? res.qualitatives.map(m => `
+                        <li class="qual-item">
+                            <span class="theme-badge" data-theme="${esc(m.theme || "Note")}">${esc(m.theme || "Note")}</span>
+                            <span>${esc(m.texte)}</span>
+                        </li>
+                    `).join("")
+                    : `<li class="qual-item" style="color:var(--text-muted);font-style:italic;">Aucune mesure qualitative spécifique recensée pour ce profil.</li>`;
+
+                // Formules détaillées
+                const formulesHtml = res.formules.map(f => `
+                    <div class="formula-group">
+                        <div class="formula-group-head">
+                            <span>${esc(f.titre)}</span>
+                            <span>${f.montant !== null ? fmtSigned(f.montant) + " / mois" : ""}</span>
+                        </div>
+                        ${f.lignes.map(l => `<div class="formula-line">${esc(l)}</div>`).join("")}
+                    </div>
+                `).join("");
+
+                const srcHtml = cand.sourceUrl
+                    ? `<a href="${esc(cand.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(cand.sourceLabel || cand.sourceUrl)} ↗</a>`
+                    : `<span>${esc(cand.sourceLabel || "Source non précisée")}</span>`;
+
+                card.innerHTML = `
+                    <div class="result-card-header">
+                        <div class="card-badges-row">
+                            ${statusBadgeHtml}
+                            <span class="date-ref">Réf. 26 nov. 2026</span>
+                        </div>
+                        <h3 class="cand-name">${esc(cand.nom)}</h3>
+                        <div class="cand-party">${esc(cand.mouvement)}</div>
+                    </div>
+
+                    <div class="synthesis-grid">
+                        <div class="synthesis-cell">
+                            <div class="synthesis-label">Impact financier mensuel estimé</div>
+                            ${impactHtml}
+                        </div>
+                        <div class="synthesis-cell">
+                            <div class="synthesis-label">Âge légal de retraite</div>
+                            <div class="synthesis-big" style="${retraiteStyle}">${esc(retraiteMain)}</div>
+                            <div class="synthesis-sub">${esc(retraiteSub)}</div>
+                        </div>
+                    </div>
+
+                    <div class="domains-section">
+                        <div class="section-heading">Sous-détail par domaine (effets directs chiffrés)</div>
+                        ${domainesHtml}
+                    </div>
+
+                    <div class="qualitative-section">
+                        <div class="section-heading">Mesures du quotidien qui vous concernent</div>
+                        <ul class="qual-list">${qualHtml}</ul>
+                    </div>
+
+                    <div class="formulas-wrap">
+                        <button type="button" class="formulas-toggle" data-toggle-formula="${esc(cand.id)}" aria-expanded="${isOpen ? "true" : "false"}">
+                            <span>Voir les formules de calcul exactes</span>
+                            <span>${isOpen ? "▲" : "▼"}</span>
+                        </button>
+                        <div class="formulas-box${isOpen ? "" : " hidden"}">
+                            ${formulesHtml}
+                        </div>
+                    </div>
+
+                    <div class="result-card-footer">
+                        <strong>Source :</strong>
+                        <span style="text-align:right;">${srcHtml}</span>
+                    </div>
+                `;
+
+                card.querySelector(`[data-toggle-formula="${cand.id}"]`).addEventListener("click", () => {
+                    state.openFormulas[cand.id] = !state.openFormulas[cand.id];
+                    renderResults();
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        function updateAll() {
+            renderProfileUI();
+            renderResults();
+        }
+
+        /* ============================================================================
+         * 8. ÉVÉNEMENTS PROFIL & SÉLECTEUR
+         * ============================================================================ */
+        function bindEvents() {
+            // Accordéons
+            document.querySelectorAll(".accordion-trigger").forEach(trigger => {
+                trigger.addEventListener("click", () => {
+                    const item = trigger.closest(".accordion-item");
+                    const isOpen = item.classList.toggle("open");
+                    trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+                });
+            });
+
+            // 4 profils types
+            document.querySelectorAll(".preset-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const key = btn.dataset.preset;
+                    if (PRESETS[key]) {
+                        state.profile = { ...PRESETS[key] };
+                        updateAll();
+                        showToast(`Profil type « ${btn.firstChild.textContent.trim()} » appliqué.`);
+                    }
+                });
+            });
+
+            document.getElementById("btn-reset-profile").addEventListener("click", () => {
+                state.profile = { ...DEFAULT_PROFILE };
+                updateAll();
+                showToast("Profil réinitialisé.");
+            });
+
+            // Situation & Revenus
+            document.getElementById("input-statut").addEventListener("change", e => {
+                state.profile.statut = e.target.value;
+                updateAll();
+            });
+            document.getElementById("input-age").addEventListener("input", e => {
+                state.profile.age = Number(e.target.value);
+                updateAll();
+            });
+            document.querySelectorAll("[data-famille]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    state.profile.famille = btn.dataset.famille;
+                    if (state.profile.famille === "monoparentale" && state.profile.enfants === 0) {
+                        state.profile.enfants = 1;
+                    }
+                    updateAll();
+                });
+            });
+            document.getElementById("btn-enf-minus").addEventListener("click", () => {
+                if (state.profile.enfants > 0) {
+                    state.profile.enfants -= 1;
+                    updateAll();
+                }
+            });
+            document.getElementById("btn-enf-plus").addEventListener("click", () => {
+                if (state.profile.enfants < 5) {
+                    state.profile.enfants += 1;
+                    updateAll();
+                }
+            });
+            document.getElementById("input-revenu").addEventListener("input", e => {
+                state.profile.revenu = Number(e.target.value);
+                updateAll();
+            });
+            document.getElementById("btn-set-smic").addEventListener("click", () => {
+                state.profile.revenu = REF_SMIC_NET;
+                updateAll();
+            });
+
+            // CAF & Prestations
+            document.getElementById("input-apl-oui").addEventListener("change", e => {
+                state.profile.aplOui = e.target.checked;
+                if (state.profile.aplOui && state.profile.aplMontant === 0) {
+                    state.profile.aplMontant = estimateAutoApl(state.profile) || 160;
+                }
+                updateAll();
+            });
+            document.getElementById("btn-apl-auto").addEventListener("click", () => {
+                const est = estimateAutoApl(state.profile);
+                if (est > 0) {
+                    state.profile.aplOui = true;
+                    state.profile.aplMontant = est;
+                    showToast(`APL estimées automatiquement à ${fmtEur(est)} / mois.`);
+                } else {
+                    state.profile.aplOui = false;
+                    state.profile.aplMontant = 0;
+                    showToast("Profil non éligible aux APL (propriétaire ou revenu supérieur au seuil indicatif).");
+                }
+                updateAll();
+            });
+            document.getElementById("input-apl-montant").addEventListener("input", e => {
+                state.profile.aplMontant = Number(e.target.value);
+                updateAll();
+            });
+            document.getElementById("input-rsa-prime").addEventListener("change", e => {
+                state.profile.rsaPrimeOui = e.target.checked;
+                updateAll();
+            });
+            document.getElementById("input-aah").addEventListener("change", e => {
+                state.profile.aahOui = e.target.checked;
+                updateAll();
+            });
+            document.getElementById("input-etudiant-detache").addEventListener("change", e => {
+                state.profile.etudiantDetacheOui = e.target.checked;
+                updateAll();
+            });
+            document.getElementById("input-bourse-montant").addEventListener("input", e => {
+                state.profile.bourseMontant = Number(e.target.value);
+                updateAll();
+            });
+
+            // Santé & Sécu
+            document.getElementById("input-mutuelle").addEventListener("input", e => {
+                state.profile.mutuelle = Number(e.target.value);
+                updateAll();
+            });
+            document.querySelectorAll("[data-soins]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    state.profile.soins = btn.dataset.soins;
+                    updateAll();
+                });
+            });
+
+            // Logement, Énergie & Courses
+            document.getElementById("input-logement").addEventListener("change", e => {
+                state.profile.logement = e.target.value;
+                updateAll();
+            });
+            document.getElementById("input-loyer").addEventListener("input", e => {
+                state.profile.loyer = Number(e.target.value);
+                updateAll();
+            });
+            document.getElementById("input-energie").addEventListener("input", e => {
+                state.profile.energie = Number(e.target.value);
+                updateAll();
+            });
+            document.getElementById("input-courses").addEventListener("input", e => {
+                state.profile.courses = Number(e.target.value);
+                updateAll();
+            });
+
+            // Transports
+            document.getElementById("input-carburant").addEventListener("input", e => {
+                state.profile.carburant = Number(e.target.value);
+                updateAll();
+            });
+            document.getElementById("input-tc").addEventListener("input", e => {
+                state.profile.tc = Number(e.target.value);
+                updateAll();
+            });
+
+            // Sélecteur candidats : recherche & mode Tout afficher / Comparer 2
+            document.getElementById("input-search-cand").addEventListener("input", e => {
+                state.searchQuery = e.target.value;
+                renderCandidateSelector();
+                if (state.showAll) renderResults();
+            });
+
+            document.getElementById("btn-toggle-mode").addEventListener("click", () => {
+                state.showAll = !state.showAll;
+                if (!state.showAll && state.selectedIds.length === 0) {
+                    state.selectedIds = state.candidates.slice(0, 2).map(c => c.id);
+                }
+                renderCandidateSelector();
+                renderResults();
+            });
+        }
+
+        /* ============================================================================
+         * 9. MODALE GESTIONNAIRE programmes.json (3 ONGLETS)
+         * ============================================================================ */
+        function bindModalEvents() {
+            const modal = document.getElementById("json-modal");
+            const textarea = document.getElementById("json-textarea");
+            const errorBox = document.getElementById("json-error");
+            const restoreBtn = document.getElementById("btn-restore-defaults");
+
+            const tabs = {
+                editor: { btn: document.getElementById("tab-editor"), panel: document.getElementById("panel-editor") },
+                add: { btn: document.getElementById("tab-add"), panel: document.getElementById("panel-add") },
+                opendata: { btn: document.getElementById("tab-opendata"), panel: document.getElementById("panel-opendata") }
+            };
+
+            function switchTab(name) {
+                Object.keys(tabs).forEach(k => {
+                    const active = k === name;
+                    tabs[k].btn.classList.toggle("active", active);
+                    tabs[k].btn.setAttribute("aria-selected", active ? "true" : "false");
+                    tabs[k].panel.classList.toggle("hidden", !active);
+                });
+                if (name === "editor") {
+                    textarea.value = JSON.stringify(state.candidates, null, 2);
+                }
+            }
+
+            function openModal() {
+                switchTab("editor");
+                errorBox.classList.add("hidden");
+                state.restoreArmed = false;
+                restoreBtn.textContent = "Restaurer les données 2027 par défaut";
+                modal.classList.remove("hidden");
+            }
+
+            function closeModal() {
+                modal.classList.add("hidden");
+            }
+
+            document.getElementById("btn-open-modal").addEventListener("click", openModal);
+            document.getElementById("btn-close-modal").addEventListener("click", closeModal);
+            modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+            document.addEventListener("keydown", e => {
+                if (e.key === "Escape" && !modal.classList.contains("hidden")) closeModal();
+            });
+
+            tabs.editor.btn.addEventListener("click", () => switchTab("editor"));
+            tabs.add.btn.addEventListener("click", () => switchTab("add"));
+            tabs.opendata.btn.addEventListener("click", () => switchTab("opendata"));
+
+            document.getElementById("btn-goto-import").addEventListener("click", () => {
+                switchTab("editor");
+                document.getElementById("input-import-json").click();
+            });
+
+            // Valider et appliquer JSON
+            document.getElementById("btn-apply-json").addEventListener("click", () => {
+                try {
+                    const parsed = JSON.parse(textarea.value);
+                    if (!Array.isArray(parsed) || parsed.length === 0) {
+                        throw new Error("Le fichier JSON doit contenir un tableau d'au moins un candidat.");
+                    }
+                    parsed.forEach((c, idx) => {
+                        if (!c.id || !c.nom || typeof c.parametres !== "object") {
+                            throw new Error(`Le candidat #${idx + 1} doit posséder "id", "nom" et "parametres".`);
+                        }
+                    });
+                    state.candidates = sortCandidates(parsed);
+                    saveCandidates(state.candidates);
+                    state.selectedIds = state.selectedIds.filter(id => state.candidates.some(c => c.id === id));
+                    if (state.selectedIds.length === 0) {
+                        state.selectedIds = state.candidates.slice(0, 2).map(c => c.id);
+                    }
+                    errorBox.classList.add("hidden");
+                    renderCandidateSelector();
+                    renderResults();
+                    closeModal();
+                    showToast("Données 2027 mises à jour et triées par ordre alphabétique.");
+                } catch (err) {
+                    errorBox.textContent = "Erreur JSON : " + err.message;
+                    errorBox.classList.remove("hidden");
+                }
+            });
+
+            // Importer .json
+            document.getElementById("input-import-json").addEventListener("change", e => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    textarea.value = ev.target.result;
+                    errorBox.classList.add("hidden");
+                    showToast("Fichier JSON chargé. Cliquez sur « Valider et appliquer le JSON ».");
+                };
+                reader.readAsText(file);
+                e.target.value = "";
+            });
+
+            // Exporter programmes.json
+            document.getElementById("btn-download-json").addEventListener("click", () => {
+                const blob = new Blob([JSON.stringify(state.candidates, null, 2)], { type: "application/json;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "programmes.json";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+                showToast("Export de programmes.json lancé.");
+            });
+
+            // Copier le JSON (compatible iFrame)
+            document.getElementById("btn-copy-json").addEventListener("click", () => {
+                try {
+                    const tmp = document.createElement("textarea");
+                    tmp.value = textarea.value;
+                    tmp.style.position = "fixed";
+                    tmp.style.opacity = "0";
+                    document.body.appendChild(tmp);
+                    tmp.select();
+                    document.execCommand("copy");
+                    tmp.remove();
+                    showToast("JSON copié dans le presse-papiers.");
+                } catch (err) {
+                    showToast("Copie automatique indisponible : sélectionnez le texte manuellement.");
+                }
+            });
+
+            // Restaurer les données 2027 par défaut (confirmation en 2 clics sans confirm())
+            restoreBtn.addEventListener("click", () => {
+                if (!state.restoreArmed) {
+                    state.restoreArmed = true;
+                    restoreBtn.textContent = "Confirmer la restauration ?";
+                    return;
+                }
+                state.candidates = sortCandidates(DEFAULT_CANDIDATES_2027);
+                saveCandidates(state.candidates);
+                state.selectedIds = state.candidates.slice(0, 2).map(c => c.id);
+                textarea.value = JSON.stringify(state.candidates, null, 2);
+                state.restoreArmed = false;
+                restoreBtn.textContent = "Restaurer les données 2027 par défaut";
+                errorBox.classList.add("hidden");
+                renderCandidateSelector();
+                renderResults();
+                showToast("Données 2027 par défaut restaurées.");
+            });
+
+            // Formulaire d'ajout d'un candidat
+            function numOrNull(id) {
+                const raw = document.getElementById(id).value.trim();
+                return raw === "" ? null : Number(raw);
+            }
+
+            document.getElementById("add-candidate-form").addEventListener("submit", e => {
+                e.preventDefault();
+                const nom = document.getElementById("add-nom").value.trim();
+                const nomFamille = document.getElementById("add-nom-famille").value.trim();
+                const mouvement = document.getElementById("add-mouvement").value.trim();
+                const sourceLabel = document.getElementById("add-source-label").value.trim();
+                if (!nom || !nomFamille || !mouvement || !sourceLabel) return;
+
+                const qualTexte = document.getElementById("add-qual-texte").value.trim();
+                const qualTheme = document.getElementById("add-qual-theme").value;
+
+                const newCand = {
+                    id: "cand-" + Date.now(),
+                    nom,
+                    nomFamille,
+                    mouvement,
+                    statutProgramme: document.getElementById("add-statut").value,
+                    sourceLabel,
+                    sourceUrl: document.getElementById("add-source-url").value.trim(),
+                    parametres: {
+                        smicNet: numOrNull("add-smic"),
+                        tauxImpotDelta: numOrNull("add-impot"),
+                        ageRetraite: numOrNull("add-retraite"),
+                        noteRetraite: null,
+                        aplDeltaPct: numOrNull("add-apl"),
+                        tvaEnergieDelta: numOrNull("add-tva-energie"),
+                        carburantDeltaPct: numOrNull("add-carburant"),
+                        secuRemboursement100: false,
+                        chequeEnergieClasseMoyenne: false,
+                        partFiscaleDes2eEnfant: false,
+                        bonusCotisationsSalarieForfait: null,
+                        bourseAutonomieJeune: null,
+                        trancheGratuiteEnergiePct: null,
+                        allocDes1erEnfant: false
+                    },
+                    mesuresQualitatives: qualTexte
+                        ? [{ theme: qualTheme, texte: qualTexte, conditions: {} }]
+                        : []
+                };
+
+                state.candidates.push(newCand);
+                state.candidates = sortCandidates(state.candidates);
+                saveCandidates(state.candidates);
+
+                if (!state.showAll && state.selectedIds.length < 2) {
+                    state.selectedIds.push(newCand.id);
+                }
+
+                e.target.reset();
+                renderCandidateSelector();
+                renderResults();
+                closeModal();
+                showToast(`Candidat « ${nom} » ajouté et trié par ordre alphabétique.`);
+            });
+        }
+
+        /* ============================================================================
+         * 10. INITIALISATION
+         * ============================================================================ */
+        window.addEventListener("DOMContentLoaded", () => {
+            bindEvents();
+            bindModalEvents();
+            renderProfileUI();
+            renderCandidateSelector();
+            renderResults();
+        });
+    </script>
+</body>
+</html>
