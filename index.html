@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impact 2027 — Simulateur Citoyen du Quotidien</title>
+    <title>Impact 2027 — Simulateur citoyen du quotidien</title>
     <style>
         /* ==========================================================================
          * 1. DESIGN TOKENS — ESTHÉTIQUE ÉDITORIALE CIVIQUE & DATAJOURNALISME
@@ -244,19 +244,19 @@
         .btn-admin {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 7px 14px;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            background: rgba(251, 191, 36, 0.20);
-            border: 1px solid rgba(251, 191, 36, 0.55);
-            color: #fef08a;
+            min-height: 34px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: #ffffff;
+            border: 1px solid var(--border-medium);
+            color: var(--navy-950);
             cursor: pointer;
         }
 
         .btn-admin:hover {
-            background: rgba(251, 191, 36, 0.30);
+            background: var(--bg-muted);
         }
 
         /* Boutons génériques */
@@ -629,26 +629,22 @@
             display: flex;
             align-items: center;
             gap: 9px;
-            min-height: 40px;
-            padding: 8px 11px;
-            border-radius: var(--radius-sm);
-            border: 1.5px solid var(--border-medium);
-            background: var(--bg-surface);
-            font-size: 0.82rem;
-            font-weight: 600;
+            min-height: 30px;
+            padding: 3px 0;
+            font-size: 0.83rem;
+            font-weight: 500;
             color: var(--text-primary);
             cursor: pointer;
             user-select: none;
         }
 
         .check-card:hover {
-            border-color: var(--navy-900);
-            background: var(--bg-subtle);
+            color: var(--navy-900);
         }
 
         .check-card input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 17px;
+            height: 17px;
             accent-color: var(--navy-900);
             margin: 0;
             flex-shrink: 0;
@@ -656,8 +652,7 @@
         }
 
         .check-card.checked {
-            border-color: var(--navy-900);
-            background: var(--slate-blue-soft);
+            font-weight: 600;
             color: var(--navy-900);
         }
 
@@ -830,10 +825,8 @@
             padding: 10px 12px;
             background: var(--bg-subtle);
             border-bottom: 1px solid var(--border-light);
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
+            font-size: 0.78rem;
+            font-weight: 600;
             color: var(--text-muted);
             white-space: nowrap;
         }
@@ -890,20 +883,6 @@
         .table-cand-btn:hover .table-cand-name {
             color: var(--navy-900);
             text-decoration: underline;
-        }
-
-        .mini-monogram {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--navy-900);
-            color: #ffffff;
-            font-size: 0.7rem;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
         }
 
         .table-cand-name {
@@ -1007,22 +986,8 @@
             line-height: 1.2;
         }
 
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.74rem;
-            font-weight: 600;
-            padding: 1px 8px;
-            border-radius: var(--radius-sm);
-        }
-
-        .badge-publie {
-            background: var(--slate-blue-soft);
-            color: var(--navy-900);
-        }
-
-        .badge-partiel {
-            background: var(--bg-muted);
+        .cand-status-text {
+            font-weight: 500;
             color: var(--text-secondary);
         }
 
@@ -1330,27 +1295,24 @@
 
         /* Accordéon natif <details>/<summary> formules de calcul */
         .formulas-section {
-            padding: 14px 20px;
+            padding: 0;
         }
 
         .formulas-details {
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            background: var(--bg-subtle);
-            overflow: hidden;
+            background: var(--bg-surface);
         }
 
         .formulas-btn {
             list-style: none;
             width: 100%;
-            min-height: 40px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 9px 13px;
-            background: var(--bg-subtle);
-            font-size: 0.8rem;
-            font-weight: 700;
+            padding: 11px 22px;
+            background: var(--bg-surface);
+            font-size: 0.81rem;
+            font-weight: 600;
             color: var(--navy-900);
             cursor: pointer;
         }
@@ -1360,7 +1322,7 @@
         }
 
         .formulas-btn:hover {
-            background: var(--bg-muted);
+            background: var(--bg-subtle);
         }
 
         .formulas-details .formulas-chevron {
@@ -1372,8 +1334,8 @@
         }
 
         .formulas-drawer {
-            padding: 13px 15px;
-            background: #ffffff;
+            padding: 14px 22px;
+            background: var(--bg-subtle);
             border-top: 1px solid var(--border-light);
             font-size: 0.76rem;
         }
@@ -1473,11 +1435,8 @@
         }
 
         .a11y-declaration {
-            margin-top: 16px;
-            padding: 13px 16px;
-            border-radius: var(--radius-sm);
-            background: var(--bg-subtle);
-            border: 1px solid var(--border-light);
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-light);
             font-size: 0.78rem;
             color: var(--text-secondary);
             line-height: 1.5;
@@ -1653,13 +1612,7 @@
     <div id="admin-banner" class="admin-banner hidden" role="region" aria-label="Administration des données">
         <div class="container admin-banner-inner">
             <span><strong>Mode Administrateur actif</strong> — Édition locale des paramètres des 10 candidats 2027 et export HTML pour GitHub.</span>
-            <button id="btn-open-modal" type="button" class="btn-admin">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <span>Éditer le JSON &amp; Exporter HTML</span>
-            </button>
+            <button id="btn-open-modal" type="button" class="btn-admin">Éditer le JSON et exporter HTML</button>
         </div>
     </div>
 
@@ -1669,7 +1622,7 @@
     <header class="site-header" role="banner">
         <div class="container header-inner">
             <div class="brand">
-                <h1 class="brand-title">Impact 2027 — Simulateur Citoyen du Quotidien</h1>
+                <h1 class="brand-title">Impact 2027 — Simulateur citoyen du quotidien</h1>
                 <p class="brand-subtitle">Impact mensuel estimé sur les impôts, la CAF, la CPAM / MSA et les dépenses courantes</p>
             </div>
         </div>
@@ -1709,27 +1662,27 @@
                 <div class="presets-grid" role="group" aria-label="Choisir un profil type pré-rempli">
                     <button type="button" class="preset-btn active" data-preset="salarie_moyen" aria-pressed="true">
                         <span class="preset-btn-title">Salarié classe moyenne</span>
-                        <span class="preset-btn-sub">36 ans • 2 400 €/m • CPAM</span>
+                        <span class="preset-btn-sub">36 ans · 2 400 €/m · CPAM</span>
                     </button>
                     <button type="button" class="preset-btn" data-preset="famille_2" aria-pressed="false">
                         <span class="preset-btn-title">Famille 2 enfants</span>
-                        <span class="preset-btn-sub">Couple • 3 800 €/m • CAF</span>
+                        <span class="preset-btn-sub">Couple · 3 800 €/m · CAF</span>
                     </button>
                     <button type="button" class="preset-btn" data-preset="etudiant_jeune" aria-pressed="false">
                         <span class="preset-btn-title">Étudiant / Jeune &lt; 30 ans</span>
-                        <span class="preset-btn-sub">22 ans • 750 €/m • APL</span>
+                        <span class="preset-btn-sub">22 ans · 750 €/m · APL</span>
                     </button>
                     <button type="button" class="preset-btn" data-preset="agriculteur_msa" aria-pressed="false">
                         <span class="preset-btn-title">Agriculteur (MSA)</span>
-                        <span class="preset-btn-sub">47 ans • 2 150 €/m • MSA</span>
+                        <span class="preset-btn-sub">47 ans · 2 150 €/m · MSA</span>
                     </button>
                     <button type="button" class="preset-btn" data-preset="retraite" aria-pressed="false">
                         <span class="preset-btn-title">Retraité</span>
-                        <span class="preset-btn-sub">71 ans • 1 850 €/m • ALD</span>
+                        <span class="preset-btn-sub">71 ans · 1 850 €/m · ALD</span>
                     </button>
                     <button type="button" class="preset-btn" data-preset="foyer_aise" aria-pressed="false">
                         <span class="preset-btn-title">Foyer aisé &amp; patrimoine</span>
-                        <span class="preset-btn-sub">7 800 €/m • 1,45 M€ pat.</span>
+                        <span class="preset-btn-sub">7 800 €/m · 1,45 M€ pat.</span>
                     </button>
                 </div>
             </div>
@@ -1982,7 +1935,7 @@
             <section class="card-panel summary-table-panel" aria-labelledby="summary-table-heading">
                 <div class="summary-table-head">
                     <h3 id="summary-table-heading">Tableau récapitulatif comparatif (gains / pertes mensuels)</h3>
-                    <span id="regime-active-indicator">Régime santé actif : <strong>CPAM (Régime général)</strong> • Cliquez sur un candidat pour voir le détail</span>
+                    <span id="regime-active-indicator">Régime santé actif : <strong>CPAM (Régime général)</strong> · Cliquez sur un candidat pour afficher ses ajouts et suppressions</span>
                 </div>
                 <div class="table-scroll">
                     <table class="comp-table">
@@ -2044,7 +1997,7 @@
             </div>
 
             <div class="footer-bottom">
-                <span>Impact 2027 — Simulateur Citoyen du Quotidien • Exécution 100 % locale sans collecte de données personnelles.</span>
+                <span>Impact 2027 — Simulateur citoyen du quotidien · Exécution 100 % locale sans collecte de données personnelles.</span>
                 <span>impact2027.fr</span>
             </div>
         </div>
@@ -3315,9 +3268,7 @@
                 impotFormules.push(`TVA alimentaire réduite (${fmtEur(profile.depenseCourses)}/m × ${-imp.tvaBaseDelta} %) : ${fmtSignedDec(gainTvaCourses)}/mois.`);
             }
 
-            if (impotBullets.length === 0) {
-                impotBullets.push(imp.noteImpot || "Aucune variation directe chiffrée applicable à votre foyer.");
-            }
+            // Pas de redondance : si aucun calcul spécifique au profil, les listes ajouts/suppressions prennent le relais.
 
             /* ========================================================================
              * PILIER 2 — PRESTATIONS SOCIALES DE LA CAF (APL, Famille, Prime, RSA/AAH)
@@ -3454,9 +3405,7 @@
                 }
             }
 
-            if (cafBullets.length === 0) {
-                cafBullets.push(caf.noteCaf || "Aucune variation directe chiffrée sur les aides CAF pour votre profil.");
-            }
+            // Pas de redondance : si aucun calcul spécifique au profil, les listes ajouts/suppressions prennent le relais.
 
             /* ========================================================================
              * PILIER 3 — CPAM / MSA & SANTÉ (Assurance Maladie, Franchises, Cotisations)
@@ -3522,9 +3471,7 @@
                 }
             }
 
-            if (santeBullets.length === 0) {
-                santeBullets.push(san.noteCpamMsa || `Aucune variation directe chiffrée sur le régime ${regimeNom}.`);
-            }
+            // Pas de redondance : si aucun calcul spécifique au profil, les listes ajouts/suppressions prennent le relais.
 
             /* ========================================================================
              * PILIER 4 — AUTRES POSTES DU QUOTIDIEN (Salaires, Énergie, Transports) & RETRAITE
@@ -3937,7 +3884,6 @@
                 tr.innerHTML = `
                     <td>
                         <button type="button" class="table-cand-btn" data-jump-id="${esc(cand.id)}" aria-pressed="${isSelected ? "true" : "false"}">
-                            <span class="mini-monogram" aria-hidden="true">${esc(getInitials(cand.nom))}</span>
                             <span>
                                 <span class="table-cand-name">${esc(cand.nom)}</span>
                                 <span class="table-cand-party">${esc(cand.mouvement)}</span>
@@ -3991,9 +3937,7 @@
                 const isOpen = Boolean(state.openFormulas[cand.id]);
 
                 const isPublie = cand.statutProgramme === "publie";
-                const badgeHtml = isPublie
-                    ? `<span class="status-badge badge-publie">Programme 2027 publié</span>`
-                    : `<span class="status-badge badge-partiel">Propositions partielles 2027</span>`;
+                const statusLabel = isPublie ? "Programme publié" : "Propositions partielles";
 
                 // Bilan global
                 const totalCls = res.totalMensuel > 0 ? "kpi-gain" : (res.totalMensuel < 0 ? "kpi-loss" : "kpi-neutral");
@@ -4006,32 +3950,38 @@
                     const addMarkCls = opts.isTax ? "mark-tax-add" : "mark-add";
                     const remMarkCls = opts.isTax ? "mark-tax-rem" : "mark-rem";
 
-                    const addHtml = addList.length > 0
-                        ? `<ul class="change-list">${addList.map(item => `<li><span class="change-mark ${addMarkCls}" aria-hidden="true">+</span>${esc(item)}</li>`).join("")}</ul>`
-                        : `<div class="change-none">${esc(opts.emptyAdd)}</div>`;
+                    if (addList.length === 0 && remList.length === 0) {
+                        return `<div class="pillar-changes"><div class="change-none">Aucune mesure annoncée sur ce volet.</div></div>`;
+                    }
 
-                    const remHtml = remList.length > 0
-                        ? `<ul class="change-list">${remList.map(item => `<li><span class="change-mark ${remMarkCls}" aria-hidden="true">−</span>${esc(item)}</li>`).join("")}</ul>`
-                        : `<div class="change-none">${esc(opts.emptyRem)}</div>`;
-
-                    return `
-                        <div class="pillar-changes">
+                    const sections = [];
+                    if (addList.length > 0) {
+                        sections.push(`
                             <div>
                                 <div class="change-group-label">${esc(opts.addLabel)}</div>
-                                ${addHtml}
+                                <ul class="change-list">${addList.map(item => `<li><span class="change-mark ${addMarkCls}" aria-hidden="true">+</span>${esc(item)}</li>`).join("")}</ul>
                             </div>
+                        `);
+                    }
+                    if (remList.length > 0) {
+                        sections.push(`
                             <div>
                                 <div class="change-group-label">${esc(opts.remLabel)}</div>
-                                ${remHtml}
+                                <ul class="change-list">${remList.map(item => `<li><span class="change-mark ${remMarkCls}" aria-hidden="true">−</span>${esc(item)}</li>`).join("")}</ul>
                             </div>
-                        </div>
-                    `;
+                        `);
+                    }
+
+                    return `<div class="pillar-changes">${sections.join("")}</div>`;
                 }
 
                 function buildPillarCol(title, scopeText, data, changesHtml) {
                     const figCls = data.mensuel > 0 ? "kpi-gain" : (data.mensuel < 0 ? "kpi-loss" : "kpi-neutral");
                     const tagCls = data.mensuel > 0 ? "tag-gain" : (data.mensuel < 0 ? "tag-loss" : "tag-neutral");
                     const tagLabel = data.mensuel > 0 ? "Gain estimé" : (data.mensuel < 0 ? "Perte / coût estimé" : "Impact neutre");
+                    const bulletsHtml = data.bullets.length > 0
+                        ? `<ul class="pillar-bullets">${data.bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>`
+                        : "";
 
                     return `
                         <div class="pillar-col">
@@ -4041,9 +3991,7 @@
                                 <div class="pillar-figure tabular ${figCls}">${fmtSigned(data.mensuel)} <span style="font-size:0.78rem;font-weight:500;color:var(--text-muted);">/ mois</span></div>
                                 <div class="pillar-annual tabular">soit <strong>${fmtSigned(data.annuel)} / an</strong></div>
                                 <span class="impact-direction-tag ${tagCls}">${tagLabel}</span>
-                                <ul class="pillar-bullets">
-                                    ${data.bullets.map(b => `<li>${esc(b)}</li>`).join("")}
-                                </ul>
+                                ${bulletsHtml}
                                 ${changesHtml}
                             </div>
                         </div>
@@ -4053,23 +4001,17 @@
                 const p1Changes = buildChangesBlock(cand.imposition?.ajouts, cand.imposition?.suppressions, {
                     isTax: true,
                     addLabel: "Impôts créés ou augmentés",
-                    remLabel: "Impôts supprimés ou réduits",
-                    emptyAdd: "Aucune hausse ou création d'impôt annoncée.",
-                    emptyRem: "Aucune suppression ou baisse d'impôt annoncée."
+                    remLabel: "Impôts supprimés ou réduits"
                 });
                 const p2Changes = buildChangesBlock(cand.caf?.ajouts, cand.caf?.suppressions, {
                     isTax: false,
                     addLabel: "Prestations CAF ajoutées ou revalorisées",
-                    remLabel: "Prestations CAF supprimées ou restreintes",
-                    emptyAdd: "Aucune nouvelle aide CAF annoncée.",
-                    emptyRem: "Aucune suppression d'aide CAF annoncée."
+                    remLabel: "Prestations CAF supprimées ou restreintes"
                 });
                 const p3Changes = buildChangesBlock(cand.cpamMsa?.ajouts, cand.cpamMsa?.suppressions, {
                     isTax: false,
                     addLabel: "Sécurité sociale : ajouts et mesures",
-                    remLabel: "Sécurité sociale : suppressions ou restrictions",
-                    emptyAdd: "Aucun ajout chiffré annoncé.",
-                    emptyRem: "Aucune suppression annoncée."
+                    remLabel: "Sécurité sociale : suppressions ou restrictions"
                 });
 
                 const p1Html = buildPillarCol("Imposition", "IR · Patrimoine · TVA", res.impot, p1Changes);
@@ -4151,9 +4093,8 @@
                             <div>
                                 <div class="cand-title-meta">
                                     <h3 class="cand-name">${esc(cand.nom)}</h3>
-                                    ${badgeHtml}
                                 </div>
-                                <div class="cand-party">${esc(cand.mouvement)} • Réf. 26 nov. 2026</div>
+                                <div class="cand-party">${esc(cand.mouvement)} · <span class="cand-status-text">${statusLabel}</span></div>
                             </div>
                         </div>
 
