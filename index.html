@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -46,15 +45,15 @@
             --neutral-border: #cbd5e1;
             --neutral-bar: #64748b;
 
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
 
-            --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.05), 0 8px 24px -4px rgba(15, 23, 42, 0.06);
-            --shadow-elevated: 0 12px 32px -4px rgba(15, 23, 42, 0.11);
-            --shadow-modal: 0 24px 56px -12px rgba(15, 23, 42, 0.32);
+            --shadow-card: none;
+            --shadow-elevated: 0 2px 8px rgba(15, 23, 42, 0.12);
+            --shadow-modal: 0 16px 40px -8px rgba(15, 23, 42, 0.28);
 
-            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-sans: "Source Sans 3", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
 
@@ -188,9 +187,8 @@
         }
 
         .site-header {
-            background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 58%, var(--slate-blue) 100%);
+            background: var(--navy-900);
             color: #ffffff;
-            box-shadow: 0 4px 20px rgba(10, 23, 43, 0.18);
         }
 
         .header-inner {
@@ -199,60 +197,31 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding: 18px 0;
+            padding: 24px 0;
         }
 
         .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
             min-width: 0;
         }
 
-        .brand-emblem {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .brand-title-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px;
-        }
-
         .brand-title {
-            font-size: 1.18rem;
-            font-weight: 800;
+            font-size: 1.35rem;
+            font-weight: 700;
             color: #ffffff;
-            letter-spacing: -0.015em;
-            line-height: 1.25;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
         }
 
-        .edition-tag {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 2px 10px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.16);
-            border: 1px solid rgba(255, 255, 255, 0.28);
-            color: #f1f5f9;
+        @media (min-width: 768px) {
+            .brand-title {
+                font-size: 1.55rem;
+            }
         }
 
         .brand-subtitle {
-            font-size: 0.84rem;
-            color: #e2e8f0;
-            margin-top: 3px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            margin-top: 5px;
         }
 
         /* Barre & bouton Mode Admin : STRICTEMENT CACHÉS par défaut (?admin=1 ou #admin) */
@@ -346,38 +315,16 @@
         }
 
         .strip-text {
-            display: flex;
-            align-items: flex-start;
-            gap: 9px;
             font-size: 0.82rem;
             color: var(--text-secondary);
             line-height: 1.45;
-            max-width: 900px;
+            max-width: 780px;
         }
 
-        .strip-text svg {
-            flex-shrink: 0;
-            margin-top: 2px;
-            color: var(--navy-900);
-        }
-
-        .strip-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .meta-chip {
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.73rem;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 999px;
-            background: var(--slate-blue-soft);
-            border: 1px solid var(--slate-blue-border);
-            color: var(--navy-900);
-            white-space: nowrap;
+        .strip-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            white-space: normal;
         }
 
         /* ==========================================================================
@@ -423,14 +370,14 @@
         }
 
         .profile-top h2 {
-            font-size: 1.06rem;
-            font-weight: 800;
+            font-size: 1.125rem;
+            font-weight: 700;
             color: var(--text-primary);
-            letter-spacing: -0.01em;
+            letter-spacing: -0.015em;
         }
 
         .profile-top p {
-            font-size: 0.79rem;
+            font-size: 0.81rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
@@ -444,11 +391,9 @@
 
         .presets-heading {
             display: block;
-            font-size: 0.74rem;
+            font-size: 0.82rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--navy-900);
+            color: var(--text-primary);
             margin-bottom: 8px;
         }
 
@@ -512,29 +457,13 @@
         }
 
         .step-legend {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            font-size: 0.9rem;
-            font-weight: 800;
+            display: block;
+            font-size: 0.94rem;
+            font-weight: 700;
             color: var(--text-primary);
             padding: 0;
             margin-bottom: 14px;
             width: 100%;
-        }
-
-        .step-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            background: var(--navy-900);
-            color: #ffffff;
-            font-size: 0.75rem;
-            font-weight: 800;
-            flex-shrink: 0;
         }
 
         .field {
@@ -579,13 +508,9 @@
         }
 
         .value-pill {
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             font-weight: 700;
             color: var(--navy-900);
-            background: var(--slate-blue-soft);
-            border: 1px solid var(--slate-blue-border);
-            padding: 3px 10px;
-            border-radius: 6px;
             white-space: nowrap;
         }
 
@@ -736,17 +661,12 @@
             color: var(--navy-900);
         }
 
-        .regime-pill-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 5px;
-            background: var(--slate-blue-soft);
-            color: var(--navy-900);
-            border: 1px solid var(--slate-blue-border);
+        .pillar-scope {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
         /* ==========================================================================
@@ -766,32 +686,28 @@
         .selector-header {
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
+            align-items: baseline;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px 14px;
             margin-bottom: 14px;
         }
 
         .selector-header h2 {
-            font-size: 1.06rem;
-            font-weight: 800;
-            letter-spacing: -0.01em;
+            font-size: 1.125rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
         }
 
         .selector-header p {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
 
         .counter-badge {
-            font-size: 0.76rem;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 999px;
-            background: var(--slate-blue-soft);
-            color: var(--navy-900);
-            border: 1px solid var(--slate-blue-border);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
             white-space: nowrap;
         }
 
@@ -800,7 +716,6 @@
             flex-wrap: wrap;
             align-items: center;
             gap: 10px;
-            margin-bottom: 14px;
         }
 
         .search-box {
@@ -869,55 +784,7 @@
             color: #ffffff;
         }
 
-        .pills-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-        }
 
-        .cand-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            min-height: 36px;
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid var(--border-medium);
-            background: var(--bg-surface);
-            color: var(--text-primary);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .cand-pill:hover {
-            border-color: var(--navy-900);
-            background: var(--slate-blue-soft);
-        }
-
-        .cand-pill.selected {
-            background: var(--navy-900);
-            border-color: var(--navy-900);
-            color: #ffffff;
-        }
-
-        .cand-pill-party {
-            font-weight: 400;
-            font-size: 0.73rem;
-            opacity: 0.85;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .dot-publie { background: #1b3b66; }
-        .dot-partiel { background: #64748b; }
-        .cand-pill.selected .dot-publie { background: #93c5fd; }
-        .cand-pill.selected .dot-partiel { background: #cbd5e1; }
 
         /* Tableau récapitulatif comparatif rapide */
         .summary-table-panel {
@@ -990,6 +857,24 @@
             background: var(--bg-subtle);
         }
 
+        .comp-table tbody tr.row-selected {
+            background: var(--slate-blue-soft);
+        }
+
+        .selection-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 18px;
+            background: var(--slate-blue-soft);
+            border: 1px solid var(--slate-blue-border);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            color: var(--navy-900);
+        }
+
         .table-cand-btn {
             background: none;
             border: none;
@@ -1033,18 +918,25 @@
             display: block;
         }
 
-        .cell-badge {
+        .cell-val {
             display: inline-block;
-            font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 5px;
+            font-weight: 600;
             white-space: nowrap;
         }
 
-        .cell-gain { background: var(--gain-bg); color: var(--gain-text); border: 1px solid var(--gain-border); }
-        .cell-loss { background: var(--loss-bg); color: var(--loss-text); border: 1px solid var(--loss-border); }
-        .cell-neu  { background: var(--neutral-bg); color: var(--neutral-text); }
-        .cell-na   { color: var(--text-muted); font-style: italic; font-weight: 500; }
+        .cell-val.cell-total {
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: var(--radius-sm);
+        }
+
+        .cell-gain { color: var(--gain-text); }
+        .cell-loss { color: var(--loss-text); }
+        .cell-neu  { color: var(--neutral-text); }
+        .cell-total.cell-gain { background: var(--gain-bg); }
+        .cell-total.cell-loss { background: var(--loss-bg); }
+        .cell-total.cell-neu  { background: var(--neutral-bg); }
+        .cell-na   { color: var(--text-muted); font-style: italic; font-weight: 400; }
 
         /* Cartes détaillées par candidat */
         .cards-list {
@@ -1057,7 +949,6 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-card);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -1065,13 +956,14 @@
         }
 
         .result-card.highlight-card {
-            box-shadow: 0 0 0 3px #1d4ed8, var(--shadow-elevated);
+            outline: 2px solid #1d4ed8;
+            outline-offset: 2px;
         }
 
         .card-header {
-            padding: 16px 20px;
+            padding: 18px 22px;
             border-bottom: 1px solid var(--border-light);
-            background: linear-gradient(180deg, #fafbfd 0%, #f3f6fb 100%);
+            background: var(--bg-surface);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -1086,32 +978,30 @@
         }
 
         .monogram-avatar {
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--navy-900);
             color: #ffffff;
-            font-size: 0.94rem;
-            font-weight: 800;
-            letter-spacing: 0.03em;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            border: 2px solid #ffffff;
-            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
         }
 
         .cand-title-meta {
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
+            align-items: baseline;
             gap: 8px;
         }
 
         .cand-name {
-            font-size: 1.15rem;
-            font-weight: 800;
+            font-size: 1.2rem;
+            font-weight: 700;
             color: var(--text-primary);
             letter-spacing: -0.015em;
             line-height: 1.2;
@@ -1120,61 +1010,53 @@
         .status-badge {
             display: inline-flex;
             align-items: center;
-            font-size: 0.69rem;
-            font-weight: 700;
-            padding: 2px 9px;
-            border-radius: 999px;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 1px 8px;
+            border-radius: var(--radius-sm);
         }
 
         .badge-publie {
             background: var(--slate-blue-soft);
             color: var(--navy-900);
-            border: 1px solid var(--slate-blue-border);
         }
 
         .badge-partiel {
-            background: #ffffff;
+            background: var(--bg-muted);
             color: var(--text-secondary);
-            border: 1px solid var(--border-medium);
         }
 
         .cand-party {
-            font-size: 0.83rem;
-            font-weight: 600;
-            color: var(--text-secondary);
+            font-size: 0.84rem;
+            font-weight: 500;
+            color: var(--text-muted);
             margin-top: 2px;
         }
 
         /* Bilan global en haut à droite de la carte */
         .global-bilan-box {
             text-align: right;
-            background: #ffffff;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: 10px 14px;
-            min-width: 210px;
+            min-width: 190px;
         }
 
         @media (max-width: 600px) {
             .global-bilan-box {
                 width: 100%;
                 text-align: left;
+                padding-top: 10px;
+                border-top: 1px solid var(--border-light);
             }
         }
 
         .kpi-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-size: 0.78rem;
+            font-weight: 600;
             color: var(--text-muted);
         }
 
         .kpi-amount {
-            font-size: 1.45rem;
-            font-weight: 800;
+            font-size: 1.6rem;
+            font-weight: 700;
             margin-top: 2px;
             letter-spacing: -0.02em;
             line-height: 1.15;
@@ -1185,47 +1067,26 @@
         .kpi-neutral { color: var(--neutral-text); }
 
         .impact-direction-tag {
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.69rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            padding: 2px 8px;
-            border-radius: 5px;
-            margin-top: 4px;
-        }
-
-        .impact-direction-tag.tag-gain {
-            background: var(--gain-bg);
-            color: var(--gain-text);
-            border: 1px solid var(--gain-border);
-        }
-
-        .impact-direction-tag.tag-loss {
-            background: var(--loss-bg);
-            color: var(--loss-text);
-            border: 1px solid var(--loss-border);
-        }
-
-        .impact-direction-tag.tag-neutral {
-            background: var(--neutral-bg);
-            color: var(--neutral-text);
-            border: 1px solid var(--neutral-border);
-        }
-
-        .kpi-sub {
+            display: block;
             font-size: 0.76rem;
-            color: var(--text-secondary);
+            font-weight: 600;
             margin-top: 3px;
         }
 
-        /* Grille des 3 encadrés piliers : Imposition | Prestations CAF | CPAM / MSA */
+        .impact-direction-tag.tag-gain { color: var(--gain-text); }
+        .impact-direction-tag.tag-loss { color: var(--loss-text); }
+        .impact-direction-tag.tag-neutral { color: var(--neutral-text); }
+
+        .kpi-sub {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Grille des 3 piliers en colonnes séparées par filets */
         .pillars-3-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 14px;
-            padding: 18px 20px;
             border-bottom: 1px solid var(--border-light);
         }
 
@@ -1235,54 +1096,40 @@
             }
         }
 
-        .pillar-card {
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            background: var(--bg-subtle);
-            padding: 14px;
+        .pillar-col {
+            padding: 18px 22px;
+            background: var(--bg-surface);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .pillar-card.pillar-gain {
-            border-color: var(--gain-border);
-            background: linear-gradient(180deg, #f4fdf7 0%, #ffffff 100%);
+        .pillar-col + .pillar-col {
+            border-top: 1px solid var(--border-light);
         }
 
-        .pillar-card.pillar-loss {
-            border-color: var(--loss-border);
-            background: linear-gradient(180deg, #fef6f6 0%, #ffffff 100%);
-        }
-
-        .pillar-head {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 6px;
+        @media (min-width: 820px) {
+            .pillar-col + .pillar-col {
+                border-top: none;
+                border-left: 1px solid var(--border-light);
+            }
         }
 
         .pillar-title {
-            font-size: 0.78rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--navy-900);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         .pillar-figure {
-            font-size: 1.22rem;
-            font-weight: 800;
+            font-size: 1.25rem;
+            font-weight: 700;
             margin-top: 6px;
             line-height: 1.2;
         }
 
         .pillar-annual {
-            font-size: 0.75rem;
+            font-size: 0.77rem;
             color: var(--text-secondary);
             margin-top: 2px;
         }
@@ -1294,9 +1141,9 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            font-size: 0.79rem;
-            color: var(--text-primary);
-            line-height: 1.4;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
         }
 
         .pillar-bullets li {
@@ -1308,39 +1155,87 @@
             content: "•";
             position: absolute;
             left: 0;
-            color: var(--navy-900);
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .pillar-changes {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .change-group-label {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .change-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.79rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .change-list li {
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .change-list li .change-mark {
+            position: absolute;
+            left: 0;
             font-weight: 800;
         }
 
-        /* Pilier 4 : Autres postes du quotidien + Jauge Retraite */
+        .change-mark.mark-add { color: var(--gain-text); }
+        .change-mark.mark-rem { color: var(--loss-text); }
+        .change-mark.mark-tax-add { color: var(--navy-900); }
+        .change-mark.mark-tax-rem { color: var(--text-secondary); }
+
+        .change-none {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Autres postes du quotidien + Jauge Retraite */
         .pillar4-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 16px;
-            padding: 16px 20px;
             border-bottom: 1px solid var(--border-light);
         }
 
         @media (min-width: 760px) {
             .pillar4-grid {
                 grid-template-columns: 1.35fr 0.65fr;
-                align-items: start;
             }
         }
 
+        .pillar4-main {
+            padding: 18px 22px;
+        }
+
         .block-title {
-            font-size: 0.73rem;
+            font-size: 0.84rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
+            color: var(--text-primary);
             margin-bottom: 10px;
         }
 
         .sub-items-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 8px;
+            gap: 0 24px;
         }
 
         @media (min-width: 480px) {
@@ -1349,29 +1244,43 @@
             }
         }
 
-        .sub-item-box {
+        .sub-item-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            padding: 8px 11px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            background: var(--bg-subtle);
-            font-size: 0.8rem;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.82rem;
+        }
+
+        .sub-item-row:last-child {
+            border-bottom: none;
+        }
+
+        @media (min-width: 480px) {
+            .sub-item-row:nth-last-child(-n+2) {
+                border-bottom: none;
+            }
         }
 
         .sub-item-name {
-            font-weight: 600;
-            color: var(--text-primary);
+            font-weight: 500;
+            color: var(--text-secondary);
         }
 
         /* Jauge comparative visuelle de l'âge de retraite (60 à 65 ans) */
-        .retire-box {
-            padding: 12px 14px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
+        .retire-col {
+            padding: 18px 22px;
+            border-top: 1px solid var(--border-light);
             background: var(--bg-subtle);
+        }
+
+        @media (min-width: 760px) {
+            .retire-col {
+                border-top: none;
+                border-left: 1px solid var(--border-light);
+            }
         }
 
         .retire-gauge {
@@ -1722,7 +1631,7 @@
             border-radius: var(--radius-sm);
             font-size: 0.82rem;
             box-shadow: var(--shadow-elevated);
-            border-left: 3px solid #60a5fa;
+            border: 1px solid rgba(255, 255, 255, 0.18);
             transition: opacity 0.25s ease;
         }
 
@@ -1760,18 +1669,8 @@
     <header class="site-header" role="banner">
         <div class="container header-inner">
             <div class="brand">
-                <div class="brand-emblem" aria-hidden="true">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
-                    </svg>
-                </div>
-                <div>
-                    <div class="brand-title-row">
-                        <h1 class="brand-title">Impact 2027 — Simulateur Citoyen du Quotidien</h1>
-                        <span class="edition-tag">Présidentielle 2027</span>
-                    </div>
-                    <p class="brand-subtitle">Estimation chiffrée des gains et pertes sur l'Imposition, les prestations CAF, la CPAM / MSA et le budget quotidien</p>
-                </div>
+                <h1 class="brand-title">Impact 2027 — Simulateur Citoyen du Quotidien</h1>
+                <p class="brand-subtitle">Impact mensuel estimé sur les impôts, la CAF, la CPAM / MSA et les dépenses courantes</p>
             </div>
         </div>
     </header>
@@ -1779,19 +1678,10 @@
     <!-- Bandeau méthodologique éditorial -->
     <section class="methodology-strip" aria-label="Repères méthodologiques">
         <div class="container strip-inner">
-            <div class="strip-text">
-                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <p>
-                    <strong>Lecture neutre et transparente :</strong> Les 10 candidats déclarés sont comparés sans recommandation de vote sur trois piliers clés (<strong>Imposition</strong>, <strong>CAF</strong>, <strong>CPAM / MSA</strong>) et les dépenses courantes. Les postes sans barème chiffré sont signalés comme <em>« Impact neutre / non chiffré »</em>.
-                </p>
-            </div>
-            <div class="strip-chips">
-                <span class="meta-chip">Données au 26 nov. 2026</span>
-                <span class="meta-chip">Parrainages : 12 mars 2027</span>
-                <span class="meta-chip">1er tour : 18 avril 2027</span>
-            </div>
+            <p class="strip-text">
+                <strong>Effets mécaniques directs :</strong> estimation des mesures chiffrées connues pour les 10 candidats déclarés (imposition, prestations CAF, CPAM / MSA et dépenses courantes). Sans barème publié, le poste reste neutre.
+            </p>
+            <div class="strip-meta">Données au 26 nov. 2026 · Parrainages : 12 mars 2027 · 1er tour : 18 avril 2027</div>
         </div>
     </section>
 
@@ -1808,14 +1698,14 @@
             <div class="profile-top">
                 <div>
                     <h2 id="profil-heading">Votre profil quotidien</h2>
-                    <p>Paramétrez votre foyer pour recalculer chaque pilier</p>
+                    <p>Ajustez votre situation pour recalculer les estimations</p>
                 </div>
                 <button id="btn-reset-profile" type="button" class="btn btn-sm">Réinitialiser</button>
             </div>
 
             <!-- 6 Profils types pré-remplis en 1 clic -->
             <div class="presets-section">
-                <span class="presets-heading">Profils types pré-remplis en 1 clic</span>
+                <span class="presets-heading">Profils types</span>
                 <div class="presets-grid" role="group" aria-label="Choisir un profil type pré-rempli">
                     <button type="button" class="preset-btn active" data-preset="salarie_moyen" aria-pressed="true">
                         <span class="preset-btn-title">Salarié classe moyenne</span>
@@ -1846,10 +1736,7 @@
 
             <!-- ÉTAPE 1 : SITUATION PERSONNELLE & RÉGIME SANTÉ -->
             <fieldset class="profile-fieldset">
-                <legend class="step-legend">
-                    <span class="step-badge" aria-hidden="true">1</span>
-                    <span>Situation personnelle &amp; Régime santé</span>
-                </legend>
+                <legend class="step-legend">Situation personnelle &amp; Régime santé</legend>
 
                 <div class="field">
                     <div class="field-head">
@@ -1917,10 +1804,7 @@
 
             <!-- ÉTAPE 2 : REVENUS, IMPÔTS & PRESTATIONS CAF ACTUELLES -->
             <fieldset class="profile-fieldset">
-                <legend class="step-legend">
-                    <span class="step-badge" aria-hidden="true">2</span>
-                    <span>Revenus, Impôts &amp; Prestations CAF</span>
-                </legend>
+                <legend class="step-legend">Revenus, Impôts &amp; Prestations CAF</legend>
 
                 <div class="field">
                     <div class="field-head">
@@ -1989,10 +1873,7 @@
 
             <!-- ÉTAPE 3 : SANTÉ (CPAM/MSA) & DÉPENSES DU QUOTIDIEN -->
             <fieldset class="profile-fieldset">
-                <legend class="step-legend">
-                    <span class="step-badge" aria-hidden="true">3</span>
-                    <span>Santé (CPAM / MSA) &amp; Quotidien</span>
-                </legend>
+                <legend class="step-legend">Santé (CPAM / MSA) &amp; Quotidien</legend>
 
                 <div class="field">
                     <div class="field-head">
@@ -2062,8 +1943,8 @@
             <section class="card-panel selector-panel" aria-labelledby="selector-heading">
                 <div class="selector-header">
                     <div>
-                        <h2 id="selector-heading">Comparateur des 10 candidats déclarés (2027)</h2>
-                        <p>Filtrez et triez selon l'impact global, les impôts, la CAF ou votre régime CPAM / MSA.</p>
+                        <h2 id="selector-heading">Comparateur des 10 candidats déclarés</h2>
+                        <p>Filtrez ou triez par impact global, impôts, CAF ou santé.</p>
                     </div>
                     <span id="selection-counter" class="counter-badge tabular">10 candidats affichés</span>
                 </div>
@@ -2075,6 +1956,10 @@
                         </svg>
                         <input id="search-candidate" type="search" class="search-input" placeholder="Rechercher un candidat ou parti..." aria-label="Rechercher un candidat ou mouvement politique">
                     </div>
+
+                    <select id="select-candidate" class="sort-select" aria-label="Choisir un candidat à inspecter">
+                        <option value="all">Candidat : Tous (10)</option>
+                    </select>
 
                     <select id="sort-candidates" class="sort-select" aria-label="Trier les candidats">
                         <option value="gain">Tri : Impact global le plus favorable</option>
@@ -2091,7 +1976,6 @@
                     </div>
                 </div>
 
-                <div id="candidate-pills" class="pills-grid" role="group" aria-label="Accès direct aux fiches candidats"></div>
             </section>
 
             <!-- Tableau récapitulatif comparatif rapide -->
@@ -2118,6 +2002,12 @@
                 </div>
             </section>
 
+            <!-- Bandeau candidat sélectionné -->
+            <div id="active-selection-bar" class="selection-bar hidden" role="region" aria-label="Candidat sélectionné">
+                <span id="active-selection-label"></span>
+                <button id="btn-show-all-candidates" type="button" class="btn btn-sm">Afficher tous les candidats</button>
+            </div>
+
             <!-- Cartes détaillées par candidat -->
             <section id="results-container" class="cards-list" aria-label="Fiches détaillées des candidats"></section>
         </div>
@@ -2130,9 +2020,9 @@
         <div class="container">
             <div class="method-grid">
                 <div class="method-col">
-                    <h3>Périmètre des 3 piliers</h3>
+                    <h3>Périmètre du calcul</h3>
                     <p>
-                        Ce simulateur évalue les <strong>effets mécaniques directs</strong> des mesures chiffrées connues au <strong>26 novembre 2026</strong> sur : (1) l'Imposition (IR, quotient familial, IFI/ISF, TVA), (2) les prestations sociales CAF (APL, allocations familiales, prime d'activité, RSA/AAH), et (3) l'Assurance Maladie (CPAM ou MSA, franchises, 100 % Sécu, cotisations agricoles).
+                        Ce simulateur évalue les <strong>effets mécaniques directs</strong> des mesures chiffrées connues au <strong>26 novembre 2026</strong> sur l'imposition (IR, quotient familial, IFI/ISF, TVA), les prestations sociales CAF (APL, allocations familiales, prime d'activité, RSA/AAH) et l'Assurance Maladie (CPAM ou MSA, franchises, remboursement intégral, cotisations agricoles).
                     </p>
                 </div>
                 <div class="method-col">
@@ -2142,15 +2032,15 @@
                     </p>
                 </div>
                 <div class="method-col">
-                    <h3>Neutralité et transparence</h3>
+                    <h3>Méthode</h3>
                     <p>
-                        Aucune note ni consigne de vote n'est délivrée. Chaque estimation détaille ligne par ligne la formule appliquée à votre profil et distingue les programmes publiés des propositions partielles.
+                        Aucune note ni recommandation de vote n'est délivrée. Chaque fiche détaille ligne par ligne le calcul appliqué à votre profil et distingue les programmes publiés des propositions partielles.
                     </p>
                 </div>
             </div>
 
             <div class="a11y-declaration">
-                <strong>Accessibilité : partiellement conforme — Contact : <a href="mailto:contact@impact2027.fr">contact@impact2027.fr</a>.</strong> Ce site applique les exigences techniques <strong>WCAG 2.1 niveau AA / RGAA 4.1.2</strong> (navigation clavier intégrale, liens d'évitement hors écran, contours <code>:focus-visible</code> contrastés <code>3px solid #1d4ed8</code>, regroupements <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code>, balises <code>&lt;output&gt;</code>, annonces dynamiques <code>aria-live="polite"</code>, double codage signes <code>+</code>/<code>−</code> et libellés explicites, respect de <code>prefers-reduced-motion</code>).
+                <strong>Accessibilité : partiellement conforme — Contact : <a href="mailto:contact@impact2027.fr">contact@impact2027.fr</a>.</strong> Ce site applique les bonnes pratiques <strong>WCAG 2.1 niveau AA / RGAA 4.1.2</strong> : navigation intégrale au clavier avec liens d'évitement et indicateurs de focus visibles, compatibilité lecteurs d'écran avec annonces dynamiques, double codage par signes et libellés pour chaque montant, et respect du réglage système de réduction des animations.
             </div>
 
             <div class="footer-bottom">
@@ -2231,7 +2121,11 @@
             "flatTaxDelta": 0,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": null,
-            "noteImpot": "Stabilité fiscale (« aucune hausse d'impôts pendant 5 ans ») et défiscalisation des pensions alimentaires pour les parents isolés."
+            "noteImpot": "Stabilité fiscale (« aucune hausse d'impôts pendant 5 ans ») et défiscalisation des pensions alimentaires pour les parents isolés.",
+            "ajouts": [],
+            "suppressions": [
+                "Défiscalisation des pensions alimentaires perçues par les parents isolés"
+            ]
         },
         "caf": {
             "aplDeltaPct": null,
@@ -2244,7 +2138,15 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": false,
-            "noteCaf": "Prime naissance 1 000 €, Livret garde d'enfant, carte famille monoparentale et gel envisagé de certaines prestations hors petites retraites."
+            "noteCaf": "Prime naissance 1 000 €, Livret garde d'enfant, carte famille monoparentale et gel envisagé de certaines prestations hors petites retraites.",
+            "ajouts": [
+                "Prime de naissance de 1 000 €",
+                "Livret garde d'enfant",
+                "Carte famille monoparentale"
+            ],
+            "suppressions": [
+                "Gel temporaire envisagé de l'indexation de certaines prestations (hors petites retraites)"
+            ]
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2253,7 +2155,12 @@
             "hausseFranchisesAldMensuel": null,
             "allegementCotisationsMsaMensuel": 35,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Maintien du dispositif 100 % Santé (optique, dentaire, audiologie), prévention et pérennisation des exonérations agricoles MSA."
+            "noteCpamMsa": "Maintien du dispositif 100 % Santé (optique, dentaire, audiologie), prévention et pérennisation des exonérations agricoles MSA.",
+            "ajouts": [
+                "Pérennisation des exonérations de cotisations agricoles MSA",
+                "Maintien du 100 % Santé et renforcement de la prévention"
+            ],
+            "suppressions": []
         },
         "quotidien": {
             "smicNet": null,
@@ -2286,7 +2193,14 @@
             "flatTaxDelta": 3,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": null,
-            "noteImpot": "Allègement d'IR pour les bas/moyens revenus, hausse sur les hauts revenus et ISF climatique sur les très hauts patrimoines."
+            "noteImpot": "Allègement d'IR pour les bas/moyens revenus, hausse sur les hauts revenus et ISF climatique sur les très hauts patrimoines.",
+            "ajouts": [
+                "ISF climatique sur les très hauts patrimoines (> 1,2 M€)",
+                "Hausse de l'IR sur les hauts revenus et de la flat tax (+3 pts)"
+            ],
+            "suppressions": [
+                "Allègement de l'impôt sur le revenu pour les bas et moyens revenus"
+            ]
         },
         "caf": {
             "aplDeltaPct": null,
@@ -2299,7 +2213,12 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": false,
-            "noteCaf": "Statut protecteur des familles monoparentales (priorité garde d'enfants/logement) et soutien aux étudiants/jeunes."
+            "noteCaf": "Statut protecteur des familles monoparentales (priorité garde d'enfants/logement) et soutien aux étudiants/jeunes.",
+            "ajouts": [
+                "Statut protecteur pour les familles monoparentales (garde d'enfants, logement)",
+                "Soutien d'autonomie pour les étudiants et jeunes (jusqu'à 950 €/mois)"
+            ],
+            "suppressions": []
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2308,7 +2227,13 @@
             "hausseFranchisesAldMensuel": null,
             "allegementCotisationsMsaMensuel": 30,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Annulation du doublement des franchises médicales CPAM/MSA et soutien aux revenus des agriculteurs."
+            "noteCpamMsa": "Annulation du doublement des franchises médicales CPAM/MSA et soutien aux revenus des agriculteurs.",
+            "ajouts": [
+                "Allègement ciblé des cotisations agricoles MSA"
+            ],
+            "suppressions": [
+                "Annulation du doublement des franchises médicales CPAM / MSA"
+            ]
         },
         "quotidien": {
             "smicNet": null,
@@ -2342,7 +2267,16 @@
             "flatTaxDelta": null,
             "tvaEnergieDelta": -14.5,
             "tvaBaseDelta": null,
-            "noteImpot": "Exonération d'IR avant 30 ans, part fiscale pleine dès le 2e enfant, TVA énergie abaissée de 20 % à 5,5 % et remplacement de l'IFI."
+            "noteImpot": "Exonération d'IR avant 30 ans, part fiscale pleine dès le 2e enfant, TVA énergie abaissée de 20 % à 5,5 % et remplacement de l'IFI.",
+            "ajouts": [
+                "Remplacement de l'IFI par un impôt sur la fortune financière"
+            ],
+            "suppressions": [
+                "Exonération d'impôt sur le revenu avant 30 ans",
+                "Suppression de l'IFI (impôt sur la fortune immobilière)",
+                "Part fiscale pleine dès le 2e enfant",
+                "TVA sur l'énergie réduite de 20 % à 5,5 %"
+            ]
         },
         "caf": {
             "aplDeltaPct": null,
@@ -2355,7 +2289,11 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": true,
-            "noteCaf": "Réserve des aides sociales non contributives CAF (APL, allocations familiales, RSA) aux foyers français / UE."
+            "noteCaf": "Réserve des aides sociales non contributives CAF (APL, allocations familiales, RSA) aux foyers français / UE.",
+            "ajouts": [],
+            "suppressions": [
+                "Suppression des aides non contributives (APL, allocations familiales, RSA) pour les ressortissants hors UE (< 5 ans)"
+            ]
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2364,7 +2302,14 @@
             "hausseFranchisesAldMensuel": null,
             "allegementCotisationsMsaMensuel": 40,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Lutte contre la fraude sociale, remplacement de l'AME par l'AMU et baisse des charges agricoles MSA."
+            "noteCpamMsa": "Lutte contre la fraude sociale, remplacement de l'AME par l'AMU et baisse des charges agricoles MSA.",
+            "ajouts": [
+                "Création d'une Aide Médicale d'Urgence (AMU)",
+                "Baisse des charges sociales agricoles MSA"
+            ],
+            "suppressions": [
+                "Suppression de l'Aide Médicale d'État (AME)"
+            ]
         },
         "quotidien": {
             "smicNet": null,
@@ -2397,7 +2342,13 @@
             "flatTaxDelta": -5,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": null,
-            "noteImpot": "Baisse générale des prélèvements obligatoires (-10 % sur l'IR), allègement de la flat tax et suppression de l'IFI."
+            "noteImpot": "Baisse générale des prélèvements obligatoires (-10 % sur l'IR), allègement de la flat tax et suppression de l'IFI.",
+            "ajouts": [],
+            "suppressions": [
+                "Baisse générale de l'impôt sur le revenu (−10 %)",
+                "Suppression de l'IFI",
+                "Allègement de la flat tax (−5 pts)"
+            ]
         },
         "caf": {
             "aplDeltaPct": null,
@@ -2410,7 +2361,13 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": true,
             "prioriteNationaleCaf": false,
-            "noteCaf": "Allocation sociale unique plafonnée à 75 % du SMIC pour limiter le cumul des aides non contributives."
+            "noteCaf": "Allocation sociale unique plafonnée à 75 % du SMIC pour limiter le cumul des aides non contributives.",
+            "ajouts": [
+                "Allocation sociale unique fusionnant les aides non contributives"
+            ],
+            "suppressions": [
+                "Plafonnement du cumul des aides sociales non contributives à 75 % du SMIC"
+            ]
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2419,7 +2376,14 @@
             "hausseFranchisesAldMensuel": -20,
             "allegementCotisationsMsaMensuel": 75,
             "baisseCotisationsActifsPct": 6.5,
-            "noteCpamMsa": "Responsabilisation des dépenses CPAM/MSA (hausse modérée des franchises) mais forte baisse des cotisations sociales actifs/MSA."
+            "noteCpamMsa": "Responsabilisation des dépenses CPAM/MSA (hausse modérée des franchises) mais forte baisse des cotisations sociales actifs/MSA.",
+            "ajouts": [
+                "Baisse des cotisations sociales sur le travail et le régime agricole MSA",
+                "Hausse modérée des franchises médicales CPAM / MSA"
+            ],
+            "suppressions": [
+                "Restriction de la prise en charge sur certains petits risques"
+            ]
         },
         "quotidien": {
             "smicNet": null,
@@ -2452,7 +2416,15 @@
             "flatTaxDelta": 5,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": -5.2,
-            "noteImpot": "Barème IR à 14 tranches (baisse sous 4 000 €/m, hausse au-dessus), ISF renforcé et TVA à 0 % sur produits de première nécessité."
+            "noteImpot": "Barème IR à 14 tranches (baisse sous 4 000 €/m, hausse au-dessus), ISF renforcé et TVA à 0 % sur produits de première nécessité.",
+            "ajouts": [
+                "Barème IR à 14 tranches (hausse au-dessus de 4 000 €/mois par part)",
+                "Rétablissement d'un ISF renforcé (> 1 M€) et hausse de la flat tax (+5 pts)"
+            ],
+            "suppressions": [
+                "TVA à 0 % sur les produits de première nécessité",
+                "Baisse de l'impôt sur le revenu sous 4 000 €/mois"
+            ]
         },
         "caf": {
             "aplDeltaPct": 10,
@@ -2465,7 +2437,14 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": false,
-            "noteCaf": "APL +10 %, allocations familiales dès le 1er enfant, AAH/minima au niveau du SMIC et garantie d'autonomie jeunes à 1 337 €/mois."
+            "noteCaf": "APL +10 %, allocations familiales dès le 1er enfant, AAH/minima au niveau du SMIC et garantie d'autonomie jeunes à 1 337 €/mois.",
+            "ajouts": [
+                "Revalorisation des APL (+10 %)",
+                "Allocations familiales dès le 1er enfant",
+                "AAH et minima sociaux portés au niveau du SMIC",
+                "Garantie d'autonomie jeunesse (1 337 €/mois)"
+            ],
+            "suppressions": []
         },
         "cpamMsa": {
             "remboursement100Pct": true,
@@ -2474,7 +2453,14 @@
             "hausseFranchisesAldMensuel": null,
             "allegementCotisationsMsaMensuel": 55,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Sécurité sociale intégrale (remboursement 100 % des soins CPAM/MSA, suppression des franchises et jours de carence) + allègement MSA petits exploitants."
+            "noteCpamMsa": "Sécurité sociale intégrale (remboursement 100 % des soins CPAM/MSA, suppression des franchises et jours de carence) + allègement MSA petits exploitants.",
+            "ajouts": [
+                "Sécurité sociale intégrale (remboursement à 100 % des soins prescrits CPAM / MSA)",
+                "Allègement des cotisations MSA pour les petits exploitants"
+            ],
+            "suppressions": [
+                "Suppression des franchises médicales et des jours de carence"
+            ]
         },
         "quotidien": {
             "smicNet": 1700,
@@ -2507,7 +2493,11 @@
             "flatTaxDelta": 0,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": null,
-            "noteImpot": "Réduction d'impôt ciblée pour les parents (jusqu'à 3 000 €/an) et stabilité des taux d'imposition (règle d'or budgétaire)."
+            "noteImpot": "Réduction d'impôt ciblée pour les parents (jusqu'à 3 000 €/an) et stabilité des taux d'imposition (règle d'or budgétaire).",
+            "ajouts": [],
+            "suppressions": [
+                "Réduction d'impôt ciblée pour les parents (jusqu'à 3 000 €/an)"
+            ]
         },
         "caf": {
             "aplDeltaPct": null,
@@ -2520,7 +2510,13 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": false,
-            "noteCaf": "Création d'une allocation familiale unique de 350 €/mois par enfant dès le 1er enfant."
+            "noteCaf": "Création d'une allocation familiale unique de 350 €/mois par enfant dès le 1er enfant.",
+            "ajouts": [
+                "Allocation familiale unique de 350 €/mois par enfant dès le 1er enfant"
+            ],
+            "suppressions": [
+                "Remplacement des allocations familiales actuelles par l'allocation unique"
+            ]
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2529,7 +2525,14 @@
             "hausseFranchisesAldMensuel": -25,
             "allegementCotisationsMsaMensuel": null,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Maîtrise des dépenses de santé CPAM/MSA (franchises médicales relevées) et maintien du 100 % Santé."
+            "noteCpamMsa": "Maîtrise des dépenses de santé CPAM/MSA (franchises médicales relevées) et maintien du 100 % Santé.",
+            "ajouts": [
+                "Maintien du dispositif 100 % Santé",
+                "Relèvement des franchises médicales CPAM / MSA"
+            ],
+            "suppressions": [
+                "Hausse du reste à charge sur les franchises médicales"
+            ]
         },
         "quotidien": {
             "smicNet": null,
@@ -2562,7 +2565,13 @@
             "flatTaxDelta": -3,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": null,
-            "noteImpot": "Baisse de l'IR pour les classes moyennes (-8 %), allègement de la fiscalité sur l'épargne/patrimoine et suppression de l'IFI."
+            "noteImpot": "Baisse de l'IR pour les classes moyennes (-8 %), allègement de la fiscalité sur l'épargne/patrimoine et suppression de l'IFI.",
+            "ajouts": [],
+            "suppressions": [
+                "Baisse de l'impôt sur le revenu pour les classes moyennes (−8 %)",
+                "Suppression de l'IFI",
+                "Allègement de la flat tax (−3 pts)"
+            ]
         },
         "caf": {
             "aplDeltaPct": null,
@@ -2575,7 +2584,13 @@
             "conditionnementRsaDelta": -45,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": false,
-            "noteCaf": "Revenu familial universel de 240 €/mois par enfant dès le 1er enfant et conditionnement strict du RSA à 15-20 h d'activité."
+            "noteCaf": "Revenu familial universel de 240 €/mois par enfant dès le 1er enfant et conditionnement strict du RSA à 15-20 h d'activité.",
+            "ajouts": [
+                "Revenu familial universel de 240 €/mois par enfant dès le 1er enfant"
+            ],
+            "suppressions": [
+                "Conditionnement strict du RSA à 15–20 h d'activité (réduction/sanction sans activité)"
+            ]
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2584,7 +2599,14 @@
             "hausseFranchisesAldMensuel": -22,
             "allegementCotisationsMsaMensuel": 60,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Hausse des franchises médicales et lutte contre les arrêts courts CPAM, mais exonération de charges agricoles MSA."
+            "noteCpamMsa": "Hausse des franchises médicales et lutte contre les arrêts courts CPAM, mais exonération de charges agricoles MSA.",
+            "ajouts": [
+                "Exonérations de charges sociales agricoles MSA",
+                "Relèvement des franchises médicales CPAM / MSA"
+            ],
+            "suppressions": [
+                "Durcissement de l'indemnisation des arrêts maladie courts"
+            ]
         },
         "quotidien": {
             "smicNet": null,
@@ -2617,7 +2639,15 @@
             "flatTaxDelta": 5,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": -5.0,
-            "noteImpot": "Baisse de l'IR sous 4 000 €/mois, rétablissement de l'ISF renforcé et baisse de la TVA sur les produits alimentaires essentiels."
+            "noteImpot": "Baisse de l'IR sous 4 000 €/mois, rétablissement de l'ISF renforcé et baisse de la TVA sur les produits alimentaires essentiels.",
+            "ajouts": [
+                "Rétablissement d'un ISF renforcé (> 1 M€)",
+                "Hausse de l'IR sur les hauts revenus et de la flat tax (+5 pts)"
+            ],
+            "suppressions": [
+                "Baisse de l'impôt sur le revenu sous 4 000 €/mois",
+                "Baisse de la TVA sur les produits alimentaires essentiels (−5 pts)"
+            ]
         },
         "caf": {
             "aplDeltaPct": 10,
@@ -2630,7 +2660,13 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": false,
-            "noteCaf": "Revalorisation des APL (+10 %), allocations familiales dès le 1er enfant et revalorisation AAH/minima sociaux."
+            "noteCaf": "Revalorisation des APL (+10 %), allocations familiales dès le 1er enfant et revalorisation AAH/minima sociaux.",
+            "ajouts": [
+                "Revalorisation des APL (+10 %)",
+                "Allocations familiales dès le 1er enfant",
+                "Revalorisation de l'AAH et des minima sociaux"
+            ],
+            "suppressions": []
         },
         "cpamMsa": {
             "remboursement100Pct": true,
@@ -2639,7 +2675,14 @@
             "hausseFranchisesAldMensuel": null,
             "allegementCotisationsMsaMensuel": 55,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Remboursement à 100 % des soins prescrits (CPAM/MSA), suppression des franchises médicales et allègement cotisations MSA."
+            "noteCpamMsa": "Remboursement à 100 % des soins prescrits (CPAM/MSA), suppression des franchises médicales et allègement cotisations MSA.",
+            "ajouts": [
+                "Remboursement à 100 % des soins prescrits (CPAM / MSA)",
+                "Allègement des cotisations agricoles MSA"
+            ],
+            "suppressions": [
+                "Suppression des franchises médicales"
+            ]
         },
         "quotidien": {
             "smicNet": 1650,
@@ -2672,7 +2715,15 @@
             "flatTaxDelta": 3,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": -4.0,
-            "noteImpot": "Réforme progressive de l'IR, ISF climatique, taxe Zucman (> 100 M€) et « TVA verte » réduite sur les biens essentiels durables."
+            "noteImpot": "Réforme progressive de l'IR, ISF climatique, taxe Zucman (> 100 M€) et « TVA verte » réduite sur les biens essentiels durables.",
+            "ajouts": [
+                "ISF climatique (> 1,2 M€) et taxe Zucman (> 100 M€)",
+                "Hausse progressive de l'IR sur les hauts revenus et de la flat tax (+3 pts)"
+            ],
+            "suppressions": [
+                "« TVA verte » réduite sur les biens essentiels durables (−4 pts)",
+                "Allègement de l'IR pour les bas et moyens revenus"
+            ]
         },
         "caf": {
             "aplDeltaPct": 10,
@@ -2685,7 +2736,15 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": false,
-            "noteCaf": "APL +10 %, allocations familiales dès le 1er enfant et garantie d'autonomie universelle remplaçant le RSA."
+            "noteCaf": "APL +10 %, allocations familiales dès le 1er enfant et garantie d'autonomie universelle remplaçant le RSA.",
+            "ajouts": [
+                "Revalorisation des APL (+10 %)",
+                "Allocations familiales dès le 1er enfant",
+                "Garantie d'autonomie universelle (jeunes à 1 150 €/mois)"
+            ],
+            "suppressions": [
+                "Remplacement du RSA actuel par la garantie d'autonomie universelle"
+            ]
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2694,7 +2753,14 @@
             "hausseFranchisesAldMensuel": null,
             "allegementCotisationsMsaMensuel": 50,
             "baisseCotisationsActifsPct": null,
-            "noteCpamMsa": "Suppression des franchises médicales récentes, prévention santé environnementale et soutien MSA à la transition agroécologique."
+            "noteCpamMsa": "Suppression des franchises médicales récentes, prévention santé environnementale et soutien MSA à la transition agroécologique.",
+            "ajouts": [
+                "Prévention en santé environnementale",
+                "Soutien MSA à la transition agroécologique"
+            ],
+            "suppressions": [
+                "Suppression des franchises médicales récentes"
+            ]
         },
         "quotidien": {
             "smicNet": 1580,
@@ -2727,7 +2793,13 @@
             "flatTaxDelta": null,
             "tvaEnergieDelta": null,
             "tvaBaseDelta": null,
-            "noteImpot": "Quotient familial élargi (part entière dès le 1er enfant), baisse d'IR (-7 %) et suppression de l'IFI."
+            "noteImpot": "Quotient familial élargi (part entière dès le 1er enfant), baisse d'IR (-7 %) et suppression de l'IFI.",
+            "ajouts": [],
+            "suppressions": [
+                "Baisse de l'impôt sur le revenu (−7 %)",
+                "Quotient familial élargi (part entière dès le 1er enfant)",
+                "Suppression de l'IFI"
+            ]
         },
         "caf": {
             "aplDeltaPct": null,
@@ -2740,7 +2812,11 @@
             "conditionnementRsaDelta": null,
             "plafondCumulAides": false,
             "prioriteNationaleCaf": true,
-            "noteCaf": "Suppression des aides sociales non contributives CAF (APL, allocations familiales, RSA) pour les étrangers hors UE (< 5 ans)."
+            "noteCaf": "Suppression des aides sociales non contributives CAF (APL, allocations familiales, RSA) pour les étrangers hors UE (< 5 ans).",
+            "ajouts": [],
+            "suppressions": [
+                "Suppression des aides non contributives (APL, allocations familiales, RSA) pour les étrangers hors UE (< 5 ans)"
+            ]
         },
         "cpamMsa": {
             "remboursement100Pct": false,
@@ -2749,7 +2825,14 @@
             "hausseFranchisesAldMensuel": -15,
             "allegementCotisationsMsaMensuel": 45,
             "baisseCotisationsActifsPct": 1.5,
-            "noteCpamMsa": "Suppression de l'AME, lutte contre la fraude carte Vitale, hausse modérée des franchises CPAM et baisse des charges MSA."
+            "noteCpamMsa": "Suppression de l'AME, lutte contre la fraude carte Vitale, hausse modérée des franchises CPAM et baisse des charges MSA.",
+            "ajouts": [
+                "Baisse des charges agricoles MSA et des cotisations actifs (−1,5 %)",
+                "Hausse modérée des franchises médicales CPAM"
+            ],
+            "suppressions": [
+                "Suppression de l'Aide Médicale d'État (AME)"
+            ]
         },
         "quotidien": {
             "smicNet": null,
@@ -2770,7 +2853,7 @@
         /* ============================================================================
          * 1. CONSTANTES DE RÉFÉRENCE & DÉTECTION MODE ADMIN (?admin=1 ou #admin)
          * ============================================================================ */
-        const STORAGE_KEY = "impact2027_candidates_v4";
+        const STORAGE_KEY = "impact2027_candidates_v5";
         const REF_SMIC_NET = 1426;       // Repère SMIC net mensuel (€)
         const REF_AGE_RETRAITE = 64;     // Âge légal actuel de référence (ans)
         const REF_TVA_ENERGIE = 20;      // Taux normal de TVA sur l'énergie (%)
@@ -3034,6 +3117,7 @@
             profile: { ...DEFAULT_PROFILE },
             activePreset: "salarie_moyen",
             candidates: loadCandidates(),
+            selectedCandidateId: "all", // "all" ou id d'un candidat choisi
             statusFilter: "all",        // all | publie | partiel
             sortBy: "gain",             // gain | impots | caf | cpam | alpha
             searchQuery: "",
@@ -3646,13 +3730,14 @@
             }
         }
 
-        function renderBadgeCell(val, hasMeasure) {
+        function renderBadgeCell(val, hasMeasure, isTotal = false) {
             if (!hasMeasure && val === 0) {
                 return `<span class="cell-na">Non précisé</span>`;
             }
-            if (val > 0) return `<span class="cell-badge cell-gain tabular">${fmtSigned(val)}</span>`;
-            if (val < 0) return `<span class="cell-badge cell-loss tabular">${fmtSigned(val)}</span>`;
-            return `<span class="cell-badge cell-neu tabular">0 €</span>`;
+            const totCls = isTotal ? " cell-total" : "";
+            if (val > 0) return `<span class="cell-val${totCls} cell-gain tabular">${fmtSigned(val)}</span>`;
+            if (val < 0) return `<span class="cell-val${totCls} cell-loss tabular">${fmtSigned(val)}</span>`;
+            return `<span class="cell-val${totCls} cell-neu tabular">0 €</span>`;
         }
 
         /* ============================================================================
@@ -3732,7 +3817,7 @@
 
             const regimeInd = document.getElementById("regime-active-indicator");
             if (regimeInd) {
-                regimeInd.innerHTML = `Régime santé actif : <strong>${isMsa ? "MSA (Mutualité Sociale Agricole)" : "CPAM (Régime général)"}</strong> • Cliquez sur un candidat pour voir sa fiche`;
+                regimeInd.innerHTML = `Régime santé actif : <strong>${isMsa ? "MSA (Mutualité Sociale Agricole)" : "CPAM (Régime général)"}</strong> · Cliquez sur un candidat pour afficher ses ajouts et suppressions`;
             }
 
             syncAllSliders();
@@ -3769,20 +3854,57 @@
             return sims;
         }
 
-        function scrollToCandidateCard(id) {
-            const card = document.getElementById(`card-${id}`);
-            if (!card) return;
-            card.scrollIntoView({ behavior: "smooth", block: "start" });
-            card.classList.add("highlight-card");
-            setTimeout(() => card.classList.remove("highlight-card"), 1600);
+        function populateCandidateSelect() {
+            const sel = document.getElementById("select-candidate");
+            if (!sel) return;
+            const prev = state.selectedCandidateId;
+            sel.innerHTML = `<option value="all">Candidat : Tous (${state.candidates.length})</option>`;
+            const alpha = sortCandidatesAlpha(state.candidates);
+            alpha.forEach(c => {
+                const opt = document.createElement("option");
+                opt.value = c.id;
+                opt.textContent = `${c.nom} (${c.mouvement})`;
+                sel.appendChild(opt);
+            });
+            const exists = alpha.some(c => c.id === prev);
+            state.selectedCandidateId = exists ? prev : "all";
+            sel.value = state.selectedCandidateId;
+        }
+
+        function selectCandidate(id, shouldScroll = true) {
+            state.selectedCandidateId = id || "all";
+            const sel = document.getElementById("select-candidate");
+            if (sel) sel.value = state.selectedCandidateId;
+            renderResults();
+
+            if (state.selectedCandidateId !== "all") {
+                const chosen = state.candidates.find(c => c.id === state.selectedCandidateId);
+                if (chosen) {
+                    announceStatus(`Fiche affichée pour ${chosen.nom} : ajouts et suppressions sur les impôts, la CAF et la sécurité sociale.`);
+                }
+                if (shouldScroll) {
+                    const target = document.getElementById("active-selection-bar") || document.getElementById(`card-${state.selectedCandidateId}`);
+                    if (target) {
+                        target.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                    const card = document.getElementById(`card-${state.selectedCandidateId}`);
+                    if (card) {
+                        card.classList.add("highlight-card");
+                        setTimeout(() => card.classList.remove("highlight-card"), 1400);
+                    }
+                }
+            } else {
+                announceStatus("Affichage de tous les candidats rétabli.");
+            }
         }
 
         function renderResults() {
             const sims = getFilteredSimulations();
             const counter = document.getElementById("selection-counter");
-            const pillsContainer = document.getElementById("candidate-pills");
             const tableBody = document.getElementById("summary-table-body");
             const cardsContainer = document.getElementById("results-container");
+            const selBar = document.getElementById("active-selection-bar");
+            const selLabel = document.getElementById("active-selection-label");
 
             document.querySelectorAll("[data-status-filter]").forEach(btn => {
                 const isActive = btn.dataset.statusFilter === state.statusFilter;
@@ -3794,25 +3916,10 @@
                 counter.textContent = `${sims.length} candidat${sims.length > 1 ? "s" : ""} affiché${sims.length > 1 ? "s" : ""}`;
             }
 
-            // Pills d'accès rapide
-            pillsContainer.innerHTML = "";
-            sims.forEach(({ cand }) => {
-                const btn = document.createElement("button");
-                btn.type = "button";
-                btn.className = "cand-pill";
-                const dotClass = cand.statutProgramme === "publie" ? "dot-publie" : "dot-partiel";
-                btn.innerHTML = `
-                    <span class="status-dot ${dotClass}" aria-hidden="true"></span>
-                    <span>${esc(cand.nom)}</span>
-                    <span class="cand-pill-party">(${esc(cand.mouvement)})</span>
-                `;
-                btn.addEventListener("click", () => scrollToCandidateCard(cand.id));
-                pillsContainer.appendChild(btn);
-            });
-
             // Tableau récapitulatif comparatif rapide
             tableBody.innerHTML = "";
             if (sims.length === 0) {
+                if (selBar) selBar.classList.add("hidden");
                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-muted);">Aucun candidat ne correspond à votre recherche.</td></tr>`;
                 cardsContainer.innerHTML = `<div class="empty-state"><strong>Aucun candidat affiché.</strong><p style="margin-top:6px;">Modifiez votre recherche ou réinitialisez les filtres.</p></div>`;
                 return;
@@ -3820,13 +3927,16 @@
 
             sims.forEach(({ cand, res }) => {
                 const tr = document.createElement("tr");
+                const isSelected = state.selectedCandidateId === cand.id;
+                if (isSelected) tr.className = "row-selected";
+
                 const retireCell = res.retraite.age !== null
                     ? `<strong class="tabular">${res.retraite.age} ans</strong>`
                     : `<span class="cell-na">Non précisé</span>`;
 
                 tr.innerHTML = `
                     <td>
-                        <button type="button" class="table-cand-btn" data-jump-id="${esc(cand.id)}">
+                        <button type="button" class="table-cand-btn" data-jump-id="${esc(cand.id)}" aria-pressed="${isSelected ? "true" : "false"}">
                             <span class="mini-monogram" aria-hidden="true">${esc(getInitials(cand.nom))}</span>
                             <span>
                                 <span class="table-cand-name">${esc(cand.nom)}</span>
@@ -3838,20 +3948,43 @@
                     <td class="num">${renderBadgeCell(res.caf.mensuel, res.caf.has)}</td>
                     <td class="num">${renderBadgeCell(res.sante.mensuel, res.sante.has)}</td>
                     <td class="num">${renderBadgeCell(res.autres.mensuel, res.autres.has)}</td>
-                    <td class="num">${renderBadgeCell(res.totalMensuel, res.anyChiffre)}</td>
+                    <td class="num">${renderBadgeCell(res.totalMensuel, res.anyChiffre, true)}</td>
                     <td class="num">${retireCell}</td>
                 `;
 
                 const jumpBtn = tr.querySelector(`[data-jump-id="${cand.id}"]`);
                 if (jumpBtn) {
-                    jumpBtn.addEventListener("click", () => scrollToCandidateCard(cand.id));
+                    jumpBtn.addEventListener("click", () => {
+                        if (state.selectedCandidateId === cand.id) {
+                            selectCandidate("all", false);
+                        } else {
+                            selectCandidate(cand.id, true);
+                        }
+                    });
                 }
                 tableBody.appendChild(tr);
             });
 
+            // Filtrage éventuel sur le candidat sélectionné pour la vue détaillée
+            let displayedSims = sims;
+            if (state.selectedCandidateId !== "all") {
+                const match = sims.filter(s => s.cand.id === state.selectedCandidateId);
+                if (match.length > 0) {
+                    displayedSims = match;
+                    if (selBar && selLabel) {
+                        selLabel.innerHTML = `Candidat choisi : <strong>${esc(match[0].cand.nom)}</strong> (${esc(match[0].cand.mouvement)}) — détail des ajouts et suppressions ci-dessous`;
+                        selBar.classList.remove("hidden");
+                    }
+                } else {
+                    if (selBar) selBar.classList.add("hidden");
+                }
+            } else if (selBar) {
+                selBar.classList.add("hidden");
+            }
+
             // Fiches détaillées par candidat
             cardsContainer.innerHTML = "";
-            sims.forEach(({ cand, res }) => {
+            displayedSims.forEach(({ cand, res }) => {
                 const card = document.createElement("article");
                 card.className = "result-card";
                 card.id = `card-${cand.id}`;
@@ -3867,40 +4000,88 @@
                 const dirCls = res.totalMensuel > 0 ? "tag-gain" : (res.totalMensuel < 0 ? "tag-loss" : "tag-neutral");
                 const dirTxt = res.totalMensuel > 0 ? "Gain estimé" : (res.totalMensuel < 0 ? "Perte / coût estimé" : "Impact neutre");
 
-                function buildPillarCard(title, badgeRight, data) {
-                    const cardStateCls = data.mensuel > 0 ? "pillar-gain" : (data.mensuel < 0 ? "pillar-loss" : "");
-                    const figCls = data.mensuel > 0 ? "kpi-gain" : (data.mensuel < 0 ? "kpi-loss" : "kpi-neutral");
-                    const tagCls = data.mensuel > 0 ? "tag-gain" : (data.mensuel < 0 ? "tag-loss" : "tag-neutral");
-                    const tagLabel = data.mensuel > 0 ? "Gain estimé" : (data.mensuel < 0 ? "Perte / coût estimé" : "Impact neutre");
+                function buildChangesBlock(ajouts, suppressions, opts) {
+                    const addList = Array.isArray(ajouts) ? ajouts : [];
+                    const remList = Array.isArray(suppressions) ? suppressions : [];
+                    const addMarkCls = opts.isTax ? "mark-tax-add" : "mark-add";
+                    const remMarkCls = opts.isTax ? "mark-tax-rem" : "mark-rem";
+
+                    const addHtml = addList.length > 0
+                        ? `<ul class="change-list">${addList.map(item => `<li><span class="change-mark ${addMarkCls}" aria-hidden="true">+</span>${esc(item)}</li>`).join("")}</ul>`
+                        : `<div class="change-none">${esc(opts.emptyAdd)}</div>`;
+
+                    const remHtml = remList.length > 0
+                        ? `<ul class="change-list">${remList.map(item => `<li><span class="change-mark ${remMarkCls}" aria-hidden="true">−</span>${esc(item)}</li>`).join("")}</ul>`
+                        : `<div class="change-none">${esc(opts.emptyRem)}</div>`;
 
                     return `
-                        <div class="pillar-card ${cardStateCls}">
+                        <div class="pillar-changes">
                             <div>
-                                <div class="pillar-head">
-                                    <span class="pillar-title">${esc(title)}</span>
-                                    ${badgeRight ? `<span class="regime-pill-badge">${esc(badgeRight)}</span>` : ""}
-                                </div>
-                                <div class="pillar-figure tabular ${figCls}">${fmtSigned(data.mensuel)} <span style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">/ mois</span></div>
-                                <div class="pillar-annual tabular">soit <strong>${fmtSigned(data.annuel)} / an</strong></div>
-                                <span class="impact-direction-tag ${tagCls}">${tagLabel}</span>
-                                <ul class="pillar-bullets">
-                                    ${data.bullets.map(b => `<li>${esc(b)}</li>`).join("")}
-                                </ul>
+                                <div class="change-group-label">${esc(opts.addLabel)}</div>
+                                ${addHtml}
+                            </div>
+                            <div>
+                                <div class="change-group-label">${esc(opts.remLabel)}</div>
+                                ${remHtml}
                             </div>
                         </div>
                     `;
                 }
 
-                const p1Html = buildPillarCard("1. Imposition", "IR • Patrimoine • TVA", res.impot);
-                const p2Html = buildPillarCard("2. Prestations CAF", "APL • Famille • Minima", res.caf);
-                const p3Html = buildPillarCard(`3. ${res.sante.regimeLabel}`, res.sante.isMsa ? "MSA actif" : "CPAM actif", res.sante);
+                function buildPillarCol(title, scopeText, data, changesHtml) {
+                    const figCls = data.mensuel > 0 ? "kpi-gain" : (data.mensuel < 0 ? "kpi-loss" : "kpi-neutral");
+                    const tagCls = data.mensuel > 0 ? "tag-gain" : (data.mensuel < 0 ? "tag-loss" : "tag-neutral");
+                    const tagLabel = data.mensuel > 0 ? "Gain estimé" : (data.mensuel < 0 ? "Perte / coût estimé" : "Impact neutre");
 
-                // Sous-postes Pilier 4
+                    return `
+                        <div class="pillar-col">
+                            <div>
+                                <div class="pillar-title">${esc(title)}</div>
+                                ${scopeText ? `<span class="pillar-scope">${esc(scopeText)}</span>` : ""}
+                                <div class="pillar-figure tabular ${figCls}">${fmtSigned(data.mensuel)} <span style="font-size:0.78rem;font-weight:500;color:var(--text-muted);">/ mois</span></div>
+                                <div class="pillar-annual tabular">soit <strong>${fmtSigned(data.annuel)} / an</strong></div>
+                                <span class="impact-direction-tag ${tagCls}">${tagLabel}</span>
+                                <ul class="pillar-bullets">
+                                    ${data.bullets.map(b => `<li>${esc(b)}</li>`).join("")}
+                                </ul>
+                                ${changesHtml}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const p1Changes = buildChangesBlock(cand.imposition?.ajouts, cand.imposition?.suppressions, {
+                    isTax: true,
+                    addLabel: "Impôts créés ou augmentés",
+                    remLabel: "Impôts supprimés ou réduits",
+                    emptyAdd: "Aucune hausse ou création d'impôt annoncée.",
+                    emptyRem: "Aucune suppression ou baisse d'impôt annoncée."
+                });
+                const p2Changes = buildChangesBlock(cand.caf?.ajouts, cand.caf?.suppressions, {
+                    isTax: false,
+                    addLabel: "Prestations CAF ajoutées ou revalorisées",
+                    remLabel: "Prestations CAF supprimées ou restreintes",
+                    emptyAdd: "Aucune nouvelle aide CAF annoncée.",
+                    emptyRem: "Aucune suppression d'aide CAF annoncée."
+                });
+                const p3Changes = buildChangesBlock(cand.cpamMsa?.ajouts, cand.cpamMsa?.suppressions, {
+                    isTax: false,
+                    addLabel: "Sécurité sociale : ajouts et mesures",
+                    remLabel: "Sécurité sociale : suppressions ou restrictions",
+                    emptyAdd: "Aucun ajout chiffré annoncé.",
+                    emptyRem: "Aucune suppression annoncée."
+                });
+
+                const p1Html = buildPillarCol("Imposition", "IR · Patrimoine · TVA", res.impot, p1Changes);
+                const p2Html = buildPillarCol("Prestations CAF", "APL · Famille · Minima", res.caf, p2Changes);
+                const p3Html = buildPillarCol(res.sante.regimeLabel, res.sante.isMsa ? "MSA actif" : "CPAM actif", res.sante, p3Changes);
+
+                // Sous-postes Autres dépenses
                 function formatSubPoste(val) {
                     if (val === null || val === undefined) return `<span class="cell-na">Non précisé</span>`;
-                    if (val > 0) return `<span class="cell-badge cell-gain tabular">${fmtSigned(val)}/m</span>`;
-                    if (val < 0) return `<span class="cell-badge cell-loss tabular">${fmtSigned(val)}/m</span>`;
-                    return `<span class="cell-badge cell-neu tabular">0 €/m</span>`;
+                    if (val > 0) return `<span class="cell-val cell-gain tabular">${fmtSigned(val)}/m</span>`;
+                    if (val < 0) return `<span class="cell-val cell-loss tabular">${fmtSigned(val)}/m</span>`;
+                    return `<span class="cell-val cell-neu tabular">0 €/m</span>`;
                 }
 
                 // Jauge Retraite (60 à 65 ans)
@@ -3942,10 +4123,10 @@
 
                 // Détail ligne par ligne pour l'accordéon
                 const allFormules = [
-                    { titre: "Pilier 1 — Imposition (IR, Quotient familial, Patrimoine, TVA)", montant: res.impot.mensuel, lignes: res.impot.formules },
-                    { titre: "Pilier 2 — Prestations sociales CAF", montant: res.caf.mensuel, lignes: res.caf.formules },
-                    { titre: `Pilier 3 — ${res.sante.regimeLabel}`, montant: res.sante.mensuel, lignes: res.sante.formules },
-                    { titre: "Pilier 4 — Salaires, Énergie & Transports", montant: res.autres.mensuel, lignes: res.autres.formules },
+                    { titre: "Imposition (IR, Quotient familial, Patrimoine, TVA)", montant: res.impot.mensuel, lignes: res.impot.formules },
+                    { titre: "Prestations sociales CAF", montant: res.caf.mensuel, lignes: res.caf.formules },
+                    { titre: res.sante.regimeLabel, montant: res.sante.mensuel, lignes: res.sante.formules },
+                    { titre: "Salaires, Énergie & Transports", montant: res.autres.mensuel, lignes: res.autres.formules },
                     { titre: "Retraite — Âge légal", montant: null, lignes: [res.retraite.note] }
                 ];
 
@@ -3991,28 +4172,28 @@
                     </div>
 
                     <div class="pillar4-grid">
-                        <div>
-                            <div class="block-title">4. Autres postes du quotidien</div>
+                        <div class="pillar4-main">
+                            <div class="block-title">Autres postes du quotidien</div>
                             <div class="sub-items-grid">
-                                <div class="sub-item-box">
+                                <div class="sub-item-row">
                                     <span class="sub-item-name">Salaires &amp; Heures sup.</span>
                                     ${formatSubPoste(res.autres.salairePoste)}
                                 </div>
-                                <div class="sub-item-box">
+                                <div class="sub-item-row">
                                     <span class="sub-item-name">Énergie &amp; Bouclier</span>
                                     ${formatSubPoste(res.autres.energiePoste)}
                                 </div>
-                                <div class="sub-item-box">
+                                <div class="sub-item-row">
                                     <span class="sub-item-name">Carburant &amp; Transports</span>
                                     ${formatSubPoste(res.autres.transportPoste)}
                                 </div>
-                                <div class="sub-item-box">
+                                <div class="sub-item-row">
                                     <span class="sub-item-name">Sous-total Autres postes</span>
                                     ${renderBadgeCell(res.autres.mensuel, res.autres.has)}
                                 </div>
                             </div>
                         </div>
-                        <div class="retire-box">
+                        <div class="retire-col">
                             ${retraiteHtml}
                         </div>
                     </div>
@@ -4208,7 +4389,15 @@
             bindRangeWithSteppers("depense-transport", "btn-transport-minus", "btn-transport-plus", "depenseTransport", 0, 600, 5);
             bindRangeWithSteppers("depense-courses", "btn-courses-minus", "btn-courses-plus", "depenseCourses", 100, 1500, 10);
 
-            // Filtres & Tri des résultats
+            // Choix d'un candidat précis, filtres & tri
+            bindControl("select-candidate", ["input", "change"], e => {
+                selectCandidate(e.target.value, e.target.value !== "all");
+            });
+
+            bindControl("btn-show-all-candidates", ["click"], () => {
+                selectCandidate("all", false);
+            });
+
             bindControl("search-candidate", ["input", "change"], e => {
                 state.searchQuery = e.target.value || "";
                 renderResults();
@@ -4279,6 +4468,7 @@
                     saveCandidates(state.candidates);
                     textarea.value = JSON.stringify(state.candidates, null, 4);
                     if (errorBox) errorBox.classList.add("hidden");
+                    populateCandidateSelect();
                     renderResults();
                     showToast("Paramètres 2027 appliqués localement.");
                 } catch (err) {
@@ -4350,6 +4540,7 @@
                     state.restoreArmed = false;
                     restoreBtn.textContent = "Restaurer par défaut";
                     if (errorBox) errorBox.classList.add("hidden");
+                    populateCandidateSelect();
                     renderResults();
                     showToast("Données 2027 par défaut restaurées.");
                 });
@@ -4362,6 +4553,7 @@
         function initApp() {
             try {
                 INITIAL_HTML_SNAPSHOT = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+                populateCandidateSelect();
                 bindEvents();
                 bindAdminEvents();
                 renderProfileUI();
@@ -4379,4 +4571,3 @@
     </script>
 </body>
 </html>
-```
